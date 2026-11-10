@@ -77,7 +77,7 @@ export const textoSets = (sets) => (sets || []).map(([a, b]) => `${a}-${b}`).joi
 export function calcularTabla(parejas, partidos, cfg = CONFIG_BASE) {
   const st = new Map();
   for (const p of parejas) {
-    if (p.estado !== 'activa') continue;
+    if (p.estado !== 'activa' || !p.jugador2) continue;   // sin compañero todavía no juega
     st.set(p.id, { id: p.id, pj: 0, pg: 0, pp: 0, pts: 0, sf: 0, sc: 0, gf: 0, gc: 0, h2h: new Map() });
   }
   for (const m of partidos) {

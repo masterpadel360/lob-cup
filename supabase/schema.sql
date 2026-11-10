@@ -288,7 +288,7 @@ returns table (pos int, pareja_id bigint, pj int, pg int, pp int, pts int,
                sf int, sc int, ds int, gf int, gc int, dg int, dir int)
 language sql stable security invoker set search_path = public, pg_temp as $$
   with cfg as (select puntos_victoria pv, puntos_derrota pd from public.config where id = 1),
-  activas as (select id from public.parejas where categoria_id = p_categoria and estado = 'activa'),
+  activas as (select id from public.parejas where categoria_id = p_categoria and estado = 'activa' and jugador2 is not null),
   tot as (
     select m.id, m.pareja_a, m.pareja_b, m.ganador,
            sum(case when (x ->> 0)::int > (x ->> 1)::int then 1 else 0 end)::int sa,
@@ -750,7 +750,7 @@ create policy editar_propio on public.perfiles for update using (id = auth.uid()
   with check (id = auth.uid() or public.es_organizador());
 -- Nadie cambia su rol desde la app: solo se pueden tocar estas columnas.
 revoke update on public.perfiles from anon, authenticated;
-grant update (nombre, apellido, telefono, genero) on public.perfiles to authenticated;
+grant update (nombre, apellido, telefono) on public.perfiles to authenticated;   -- el género lo cambia solo el organizador desde el SQL Editor
 -- Sin sesión no se escribe nada.
 revoke insert, update, delete on all tables in schema public from anon;
 grant select on public.jugadores_publicos to anon, authenticated;

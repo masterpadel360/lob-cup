@@ -135,6 +135,8 @@ const mb = [M(1, 1, 1, 2, [[6, 0], [6, 0]], { wo: true })];
 const tb = calcularTabla(pb, mb);
 prueba('baja fuera de la tabla, W.O. cuenta', tb.length === 1 && tb[0].pts === 1 && tb[0].gf === 12, tb);
 
+prueba('pareja sin compañero no figura en la tabla', calcularTabla([P(1, 'a', 'b'), P(2, 'c', null)], []).length === 1);
+
 // ---- Ranking
 const jug = ['j1', 'j2', 'j3', 'j4', 'j5', 'j6', 'j7', 'j8'].map((id) => ({ id, nombre: 'Jugador ' + id }));
 const rk = calcularRanking(jug, parejas, partidos);

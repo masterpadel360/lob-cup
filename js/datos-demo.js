@@ -72,7 +72,7 @@ export function generarLiga(ahora = Date.now()) {
   // Organizador
   jugadores.push({ id: 'org', nombre: 'Organización', apellido: '', telefono: '3510000000', genero: null, rol: 'organizador' });
 
-  const YO = 'j17', MI_PAREJA = 9;                 // Lautaro Godoy · 7.ª Masculino (pareja 9 con Ramiro Rivas)
+  const YO = 'j17', MI_PAREJA = 9;                 // Lautaro Maldonado · 7.ª Masculino (pareja 9 con Ramiro Herrera)
   const inicioFecha = (f) => ahora - (5 - f) * 7 * DIA - 2 * DIA;   // fecha 5 = esta semana
   const SETS_GANA = [[6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 4], [7, 5], [7, 6], [6, 3], [6, 2]];
   const setGanado = (ganaA) => { const [x, y] = elegir(SETS_GANA); return ganaA ? [x, y] : [y, x]; };
@@ -112,10 +112,12 @@ export function generarLiga(ahora = Date.now()) {
             const base = new Date(ahora + (fecha === 5 ? 1 : 6) * DIA + j * DIA);
             const dow = base.getDay();
             const opciones = TURNOS_BASE.filter((t) => t.dia === dow);
-            if (opciones.length) {
-              const t = opciones[j % opciones.length];
+            const fISO = fechaISO(base.getTime());
+            const t = opciones.length ? opciones[j % opciones.length] : null;
+            const libre = t && [...Array(t.canchas).keys()].map((k) => k + 1).find((c) => !reservas.some((x) => x.fecha === fISO && x.inicio === t.inicio && x.cancha === c));
+            if (t && libre) {
               rid++;
-              reservas.push({ id: rid, partido_id: mid, fecha: fechaISO(base.getTime()), inicio: t.inicio, fin: t.fin, cancha: 1 + (rid % t.canchas),
+              reservas.push({ id: rid, partido_id: mid, fecha: fechaISO(base.getTime()), inicio: t.inicio, fin: t.fin, cancha: libre,
                 estado: r() < 0.5 ? 'confirmada' : 'pendiente', creada_por: parejas.find((p) => p.id === a).jugador1, creada_at: ahora - DIA });
             }
           }
