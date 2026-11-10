@@ -62,7 +62,7 @@ const I = {
   link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
 };
 const ico = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
-const LOGO = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x=".5" y=".5" width="39" height="39" rx="10" fill="#0b0b0c" stroke="#2a2d33"/><path d="M7 31 Q 17 1 32 21" fill="none" stroke="#d4ff00" stroke-width="2.4" stroke-dasharray="3.2 3.2" stroke-linecap="round"/><circle cx="31" cy="25.5" r="5.2" fill="#d4ff00"/><path d="M27.6 22.5c2 1.6 2.4 4.4 1 6.3" fill="none" stroke="#0b0b0c" stroke-width="1.2"/></svg>';
+const LOGO = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x=".5" y=".5" width="39" height="39" rx="12" fill="#0d2150" stroke="rgba(255,255,255,.16)"/><path d="M7 31 Q 17 1 32 21" fill="none" stroke="#d4f23f" stroke-width="2.4" stroke-dasharray="3.2 3.2" stroke-linecap="round"/><circle cx="31" cy="25.5" r="5.2" fill="#d4f23f"/><path d="M27.6 22.5c2 1.6 2.4 4.4 1 6.3" fill="none" stroke="#0d2150" stroke-width="1.2"/></svg>';
 
 // ---------------------------------------------------------------------
 // Índices (se arman cada vez que se recarga)
@@ -261,10 +261,12 @@ function vInicio() {
   if (S.x.esOrg) return vBandeja();
   if (!S.x.yo) return vBienvenida();
   const yo = S.x.yo, p = S.x.miPareja;
-  let h = `<div class="saludo"><div><p class="kicker">${esc(S.d.config.temporada)}</p><h1 class="h1">Hola, ${esc(yo.nombre || 'jugador')}</h1>
+  let h = `<section class="stage"><div class="saludo"><div><p class="kicker">${esc(S.d.config.temporada)}</p><h1 class="h1">Hola, ${esc(yo.nombre || 'jugador')}</h1>
     <p class="mute small">${p ? `${esc(S.x.cat.get(p.categoria_id).nombre)} · con ${esc(p.jugador2 ? nombreJ(p.jugador1 === yo.id ? p.jugador2 : p.jugador1) : 'compañero a confirmar')}` : 'Todavía no estás en una pareja'}</p></div></div>`;
-  if (!p) return h + `<div class="sec">${vSumate()}</div>`;
-  h += `<div class="sec">${heroProximo(p)}</div>`;
+  if (!p) return h + `</section><div class="sec">${vSumate()}</div>`;
+  const st = p.jugador2 && S.x.tabla(p.categoria_id).find((r) => r.id === p.id);
+  if (st) h += `<div class="hero-stats"><div><b>${st.pos}°</b><span>Puesto</span></div><div><b>${st.pts}</b><span>Puntos</span></div><div><b>${st.pj}</b><span>Jugados</span></div><div><b>${st.pj ? Math.round((st.pg / st.pj) * 100) + '%' : '–'}</b><span>Ganados</span></div></div>`;
+  h += `<div class="sec">${heroProximo(p)}</div></section>`;
   const pend = pendientes();
   if (pend.length) h += `<div class="sec"><div class="sec-h"><h2 class="h2">Para hacer</h2><span class="chip ${pend.some((x) => x.urg) ? 'volt' : ''}">${pend.length}</span></div><div class="stack">${pend.map(tarjetaPendiente).join('')}</div></div>`;
   h += miniTabla(p.categoria_id, p.id);
@@ -285,7 +287,7 @@ function heroProximo(p) {
   const st = S.x.tabla(p.categoria_id).find((r) => r.id === p.id);
   if (!m) {
     return `<div class="hero"><p class="kicker">Tu temporada</p><div class="fecha-big" style="font-size:44px;margin-top:6px">Sin partidos pendientes</div>
-      ${st ? `<div class="stats" style="margin-top:14px"><div class="stat"><b>${st.pos}°</b><span>Puesto</span></div><div class="stat"><b>${st.pts}</b><span>Puntos</span></div><div class="stat"><b>${st.pg}</b><span>Ganados</span></div><div class="stat"><b>${st.pj}</b><span>Jugados</span></div></div>` : ''}</div>`;
+      <p style="margin-top:10px;color:var(--hero-mute)">Ya jugaste todas tus fechas. Mirá cómo quedó la tabla.</p></div>`;
   }
   const riv = rivalDe(m, p.id);
   const r = S.x.reservaDe.get(m.id);

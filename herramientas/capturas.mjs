@@ -203,9 +203,9 @@ try {
   await tab('inicio'); await foto('23-oscuro-inicio');
   await tab('tabla'); await foto('24-oscuro-tabla');
   await tab('ranking'); await foto('25-oscuro-ranking');
-  chequear('fondo oscuro', (await ev('getComputedStyle(document.body).backgroundColor')) === 'rgb(10, 11, 13)');
+  chequear('fondo oscuro', (await ev('getComputedStyle(document.body).backgroundColor')) === 'rgb(5, 12, 28)');
   await ev(`document.documentElement.dataset.theme='light'`); await dormir(100);
-  chequear('forzar claro gana al sistema', (await ev('getComputedStyle(document.body).backgroundColor')) === 'rgb(242, 242, 238)');
+  chequear('forzar claro gana al sistema', (await ev('getComputedStyle(document.body).backgroundColor')) === 'rgb(243, 242, 236)');
   await ev(`delete document.documentElement.dataset.theme`);
   await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }] });
 
