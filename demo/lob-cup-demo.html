@@ -1,0 +1,2080 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="description" content="Liga amateur de pádel: fixture, resultados, tabla y ranking.">
+<title>LOB CUP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..900;1,62..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   LOB CUP — identidad visual
+   Negro + amarillo "volt" + rojo de alerta. Tipografía Archivo (ancha y
+   condensada, en itálica para los titulares). Mobile-first (390 px).
+   ===================================================================== */
+:root {
+  --bg: #f2f2ee;
+  --surface: #ffffff;
+  --surface-2: #e9e9e3;
+  --ink: #0b0b0c;
+  --mute: #5b5e66;
+  --line: #dcdcd5;
+  --volt: #d4ff00;
+  --volt-ink: #0b0b0c;
+  --volt-text: #4d5e00;      /* volt legible sobre fondo claro */
+  --hot: #e5372a;
+  --ok: #0f9f5a;
+  --warn: #b26b00;
+  --blue: #2c5bff;
+  --hero: #0b0b0c;
+  --hero-ink: #f4f5f0;
+  --hero-mute: #9aa0a8;
+  --shadow: 0 1px 0 rgba(0, 0, 0, .04), 0 8px 24px -16px rgba(0, 0, 0, .25);
+  --r: 14px;
+  --tab-h: 64px;
+  --font: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a0b0d; --surface: #15171b; --surface-2: #1e2127; --ink: #f4f5f0; --mute: #979ca6; --line: #282c33;
+    --volt-text: #d4ff00; --hot: #ff5446; --ok: #2fdc84; --warn: #ffb020; --blue: #6b8cff;
+    --hero: #000000; --shadow: 0 1px 0 rgba(255, 255, 255, .03); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a0b0d; --surface: #15171b; --surface-2: #1e2127; --ink: #f4f5f0; --mute: #979ca6; --line: #282c33;
+  --volt-text: #d4ff00; --hot: #ff5446; --ok: #2fdc84; --warn: #ffb020; --blue: #6b8cff;
+  --hero: #000000; --shadow: 0 1px 0 rgba(255, 255, 255, .03); color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.4;
+  min-height: 100vh; -webkit-tap-highlight-color: transparent; overflow-x: hidden;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; }
+a { color: inherit; }
+.num, .tab-num { font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+[hidden] { display: none !important; }
+
+/* ---------- Encabezado ---------- */
+.top {
+  position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
+}
+.top-in { max-width: 560px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; min-height: 56px; }
+.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; min-width: 0; }
+.logo svg { width: 34px; height: 34px; flex: none; }
+.logo b {
+  font-weight: 900; font-style: italic; font-stretch: 75%; font-size: 24px; letter-spacing: -.5px; text-transform: uppercase;
+  line-height: 1; white-space: nowrap;
+}
+.top .sp { flex: 1; }
+.pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 600; color: var(--mute); white-space: nowrap; }
+.icon-btn { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.icon-btn:active { background: var(--surface-2); }
+.icon-btn svg { width: 22px; height: 22px; }
+
+/* Barra de demo */
+.demo-bar { background: var(--volt); color: var(--volt-ink); }
+.demo-in { max-width: 560px; margin: 0 auto; padding: 6px 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+.demo-in .tag { font-weight: 900; font-style: italic; letter-spacing: .5px; }
+.demo-in select {
+  flex: 1; min-width: 0; height: 36px; border-radius: 10px; border: 1.5px solid var(--volt-ink); background: transparent; color: var(--volt-ink);
+  padding: 0 8px; font-weight: 700; font-size: 13px;
+}
+.demo-in select option { color: #0b0b0c; background: #fff; }
+.demo-in .icon-btn { width: 40px; height: 36px; border: 1.5px solid var(--volt-ink); border-radius: 10px; }
+
+/* ---------- Contenido ---------- */
+main { max-width: 560px; margin: 0 auto; padding: 16px 16px calc(var(--tab-h) + 28px + env(safe-area-inset-bottom)); }
+.h1 { font-weight: 900; font-style: italic; font-stretch: 80%; text-transform: uppercase; font-size: 30px; line-height: .95; letter-spacing: -.5px; }
+.h2 { font-weight: 900; font-style: italic; font-stretch: 85%; text-transform: uppercase; font-size: 19px; letter-spacing: -.2px; line-height: 1.05; }
+.kicker { font-size: 11px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--mute); }
+.mute { color: var(--mute); }
+.small { font-size: 13px; }
+.sec { margin-top: 26px; }
+.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.sec-h a, .link { font-size: 13px; font-weight: 700; color: var(--volt-text); text-decoration: none; background: none; min-height: 44px; display: inline-flex; align-items: center; }
+.saludo { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.saludo p { margin-top: 6px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
+.card.pad { padding: 16px; }
+.stack > * + * { margin-top: 10px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.grow { flex: 1; min-width: 0; }
+.ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Héroe: el momento de marca (siempre negro) */
+.hero {
+  position: relative; overflow: hidden; background: var(--hero); color: var(--hero-ink); border-radius: 18px; padding: 18px 16px 16px;
+  isolation: isolate;
+}
+.hero::before { /* la parábola del globo */
+  content: ""; position: absolute; z-index: -1; right: -70px; top: -120px; width: 300px; height: 260px;
+  border: 2px dashed rgba(212, 255, 0, .35); border-radius: 50%; border-left-color: transparent; border-bottom-color: transparent; transform: rotate(-12deg);
+}
+.hero::after { content: ""; position: absolute; z-index: -1; right: 26px; top: 22px; width: 18px; height: 18px; border-radius: 50%; background: var(--volt); box-shadow: 0 0 0 6px rgba(212, 255, 0, .12); }
+.hero .kicker { color: var(--volt); }
+.hero .fecha-big { font-weight: 900; font-style: italic; font-stretch: 70%; font-size: 56px; line-height: .85; letter-spacing: -1px; text-transform: uppercase; }
+.hero .vs { margin-top: 14px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; }
+.hero .vs .lado { min-width: 0; }
+.hero .vs .lado b { display: block; font-weight: 800; font-size: 16px; line-height: 1.15; overflow-wrap: anywhere; }
+.hero .vs .lado span { font-size: 12px; color: var(--hero-mute); }
+.hero .vs .lado.der { text-align: right; }
+.hero .vs .x { font-weight: 900; font-style: italic; font-size: 18px; color: var(--volt); }
+.hero .chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+.hero .chip { background: rgba(255, 255, 255, .08); color: var(--hero-ink); border-color: transparent; }
+.hero .acciones { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.hero .btn.ghost { color: var(--hero-ink); border-color: rgba(255, 255, 255, .22); }
+
+/* Botones */
+.btn {
+  min-height: 48px; padding: 0 16px; border-radius: 12px; font-weight: 800; font-size: 15px; display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; text-align: center; line-height: 1.1; border: 1.5px solid transparent; text-decoration: none; user-select: none;
+  transition: transform .08s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn.volt { background: var(--volt); color: var(--volt-ink); }
+.btn.dark { background: var(--ink); color: var(--bg); }
+.btn.ghost { border-color: var(--line); background: transparent; }
+.btn.hot { background: var(--hot); color: #fff; }
+.btn.ok { background: var(--ok); color: #fff; }
+.btn.block { width: 100%; }
+.btn.sm { min-height: 44px; font-size: 14px; padding: 0 12px; }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.btns.one { grid-template-columns: 1fr; }
+
+/* Chips de estado */
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid var(--line); white-space: nowrap; }
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.chip.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.chip.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.chip.hot { color: var(--hot); border-color: color-mix(in srgb, var(--hot) 45%, transparent); }
+.chip.volt { background: var(--volt); color: var(--volt-ink); border-color: var(--volt); }
+.chip.solid { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* Filtros (categorías, fechas) */
+.filtros { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 4px; scroll-snap-type: x proximity; }
+.filtros::-webkit-scrollbar { display: none; }
+.filtros button {
+  flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--line); font-weight: 800; font-size: 13px; white-space: nowrap; scroll-snap-align: start;
+}
+.filtros button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--surface-2); border-radius: 12px; padding: 4px; gap: 4px; }
+.seg button { min-height: 40px; border-radius: 9px; font-weight: 800; font-size: 13px; color: var(--mute); }
+.seg button.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+
+/* Pendientes */
+.pend { display: flex; gap: 12px; padding: 14px; align-items: flex-start; }
+.pend .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; background: var(--surface-2); }
+.pend .ico svg { width: 20px; height: 20px; }
+.pend.urg .ico { background: var(--volt); color: var(--volt-ink); }
+.pend.hot .ico { background: color-mix(in srgb, var(--hot) 16%, transparent); color: var(--hot); }
+.pend b { display: block; font-size: 15px; line-height: 1.2; }
+.pend p { font-size: 13px; color: var(--mute); margin-top: 3px; }
+.pend .btns { margin-top: 10px; }
+
+/* Marcador (sets) */
+.marcador { display: grid; grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; column-gap: 10px; align-items: center; }
+.marcador .eq { min-width: 0; font-weight: 700; font-size: 14px; line-height: 1.2; overflow-wrap: anywhere; }
+.marcador .eq.gana { font-weight: 900; }
+.marcador .eq.gana::after { content: " ●"; color: var(--volt-text); font-size: 10px; vertical-align: middle; }
+.marcador .sets { display: flex; gap: 4px; }
+.marcador .sets span { width: 28px; height: 30px; border-radius: 7px; display: grid; place-items: center; font-weight: 900; font-size: 16px; background: var(--surface-2); font-variant-numeric: tabular-nums; }
+.marcador .sets span.g { background: var(--ink); color: var(--bg); }
+.marcador .sets span.stb { font-size: 13px; }
+
+/* Tarjeta de partido */
+.partido { padding: 12px 14px; display: block; width: 100%; text-align: left; }
+.partido + .partido { border-top: 1px solid var(--line); }
+.partido .meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: var(--mute); font-weight: 700; }
+.partido.mio { box-shadow: inset 3px 0 0 var(--volt); }
+.lista { overflow: hidden; }
+
+/* Tabla de posiciones */
+.tabla { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.tabla th { font-size: 11px; font-weight: 800; color: var(--mute); text-align: center; padding: 10px 0; border-bottom: 1px solid var(--line); letter-spacing: .5px; }
+.tabla td { padding: 10px 0; text-align: center; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; font-size: 14px; }
+.tabla tr:last-child td { border-bottom: 0; }
+.tabla th.pos, .tabla td.pos { width: 34px; }
+.tabla td.pos { font-weight: 900; font-style: italic; font-size: 17px; }
+.tabla th.n, .tabla td.n { width: 30px; }
+.tabla th.pts, .tabla td.pts { width: 40px; }
+.tabla td.pts { font-weight: 900; font-size: 16px; }
+.tabla th.eq, .tabla td.eq { text-align: left; padding-left: 4px; padding-right: 6px; }
+.tabla td.eq b { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tabla td.eq small { display: block; font-size: 11px; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tabla tr.mia td { background: color-mix(in srgb, var(--volt) 22%, transparent); }
+.tabla tr.mia td.pos { box-shadow: inset 3px 0 0 var(--volt); }
+.tabla tr[data-act] { cursor: pointer; }
+.tabla tr.podio1 td.pos { color: var(--volt-text); }
+
+/* Ranking */
+.podio { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 8px; align-items: end; }
+.podio .p { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 8px; text-align: center; min-width: 0; }
+.podio .p.uno { background: var(--hero); color: var(--hero-ink); border-color: var(--hero); padding-top: 18px; }
+.podio .p .lugar { font-weight: 900; font-style: italic; font-stretch: 70%; font-size: 34px; line-height: .9; }
+.podio .p.uno .lugar { color: var(--volt); font-size: 44px; }
+.podio .p b { display: block; font-size: 13px; line-height: 1.15; margin-top: 6px; overflow-wrap: anywhere; }
+.podio .p .pts { font-weight: 900; font-size: 18px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.podio .p small { font-size: 11px; opacity: .7; }
+.rk-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto 52px; gap: 8px; align-items: center; padding: 10px 14px; min-height: 56px; width: 100%; text-align: left; }
+.rk-row + .rk-row { border-top: 1px solid var(--line); }
+.rk-row .pos { font-weight: 900; font-style: italic; font-size: 17px; text-align: center; }
+.rk-row b { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rk-row small { display: block; font-size: 12px; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rk-row .pts { font-weight: 900; font-size: 17px; text-align: right; font-variant-numeric: tabular-nums; }
+.rk-row.yo { background: color-mix(in srgb, var(--volt) 22%, transparent); }
+.racha { font-size: 11px; font-weight: 900; padding: 3px 7px; border-radius: 6px; background: var(--surface-2); white-space: nowrap; }
+.racha.G { background: var(--volt); color: var(--volt-ink); }
+.racha.P { color: var(--hot); }
+.ultimos { display: flex; gap: 4px; }
+.ultimos i { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-style: normal; font-size: 11px; font-weight: 900; background: var(--surface-2); }
+.ultimos i.G { background: var(--volt); color: var(--volt-ink); }
+
+/* Estadísticas */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.stat { background: var(--surface-2); border-radius: 12px; padding: 10px 6px; text-align: center; min-width: 0; }
+.stat b { display: block; font-weight: 900; font-size: 22px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat span { display: block; font-size: 11px; color: var(--mute); margin-top: 4px; font-weight: 700; }
+.hero .stat { background: rgba(255, 255, 255, .07); }
+.hero .stat span { color: var(--hero-mute); }
+
+/* Destacados de la fecha */
+.dest { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dest .card { padding: 12px; min-width: 0; }
+.dest .card b { display: block; font-size: 14px; margin-top: 4px; line-height: 1.2; overflow-wrap: anywhere; }
+.dest .card .big { font-weight: 900; font-style: italic; font-size: 26px; line-height: 1; }
+.dest .card.full { grid-column: 1 / -1; }
+
+/* Formularios */
+.campo { display: block; }
+.campo + .campo { margin-top: 12px; }
+.campo span { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.campo input, .campo select, .campo textarea {
+  width: 100%; min-height: 48px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); padding: 10px 12px; font-size: 16px;
+}
+.campo textarea { min-height: 84px; resize: vertical; }
+.campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--ink); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid2 .campo + .campo { margin-top: 0; }
+.ayuda { font-size: 12px; color: var(--mute); margin-top: 6px; }
+.error { color: var(--hot); font-weight: 700; font-size: 13px; }
+.switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 6px 0; }
+.switch input { width: 48px; height: 28px; appearance: none; -webkit-appearance: none; background: var(--line); border-radius: 999px; position: relative; flex: none; transition: background .15s; }
+.switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); }
+.switch input:checked { background: var(--ink); }
+.switch input:checked::after { transform: translateX(20px); background: var(--volt); }
+
+/* Editor de resultado */
+.score { display: grid; grid-template-columns: minmax(0, 1fr) 120px 120px; gap: 8px 6px; align-items: center; }
+.score .hd { font-size: 12px; font-weight: 800; text-align: center; color: var(--mute); text-transform: uppercase; letter-spacing: .5px; overflow-wrap: anywhere; }
+.score .lbl { font-weight: 800; font-size: 13px; line-height: 1.15; }
+.score .lbl small { display: block; font-size: 11px; color: var(--mute); font-weight: 600; }
+.step { display: grid; grid-template-columns: 38px 1fr 38px; align-items: center; background: var(--surface-2); border-radius: 12px; height: 48px; }
+.step button { height: 48px; font-size: 22px; font-weight: 700; border-radius: 12px; }
+.step button:active { background: var(--line); }
+.step output { text-align: center; font-weight: 900; font-size: 22px; font-variant-numeric: tabular-nums; }
+.score .fila-stb[hidden] { display: none; }
+.veredicto { margin-top: 14px; padding: 12px; border-radius: 12px; background: var(--surface-2); font-weight: 800; font-size: 14px; }
+.veredicto.ok { background: color-mix(in srgb, var(--volt) 35%, transparent); }
+.veredicto.mal { color: var(--hot); }
+
+/* Turnos para reservar */
+.dias { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 6px; }
+.dias::-webkit-scrollbar { display: none; }
+.dias button { flex: none; width: 58px; min-height: 64px; border-radius: 12px; border: 1.5px solid var(--line); display: grid; place-items: center; padding: 6px 0; line-height: 1.05; }
+.dias button small { font-size: 11px; font-weight: 700; color: var(--mute); text-transform: uppercase; }
+.dias button b { font-size: 20px; font-weight: 900; }
+.dias button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.dias button.on small { color: var(--bg); opacity: .7; }
+.slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.slot { min-height: 60px; border-radius: 12px; border: 1.5px solid var(--line); padding: 8px 10px; text-align: left; }
+.slot b { display: block; font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.slot small { font-size: 12px; color: var(--mute); font-weight: 700; }
+.slot.on { border-color: var(--ink); background: var(--volt); color: var(--volt-ink); }
+.slot.on small { color: var(--volt-ink); }
+.slot[disabled] { opacity: .4; }
+
+/* Barra de pestañas */
+.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tabs-in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); height: var(--tab-h); }
+.tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 800; color: var(--mute); position: relative; min-width: 0; }
+.tabs button svg { width: 24px; height: 24px; }
+.tabs button.on { color: var(--ink); }
+.tabs button.on::before { content: ""; position: absolute; top: 0; left: 28%; right: 28%; height: 3px; border-radius: 0 0 3px 3px; background: var(--volt); }
+.tabs .badge { position: absolute; top: 8px; left: calc(50% + 6px); min-width: 18px; height: 18px; border-radius: 9px; background: var(--hot); color: #fff; font-size: 11px; display: grid; place-items: center; padding: 0 5px; }
+
+/* Hoja inferior */
+.overlay { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, .5); display: flex; align-items: flex-end; justify-content: center; animation: fade .15s ease; }
+.sheet {
+  width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain; background: var(--bg); border-radius: 20px 20px 0 0;
+  padding: 8px 16px calc(20px + env(safe-area-inset-bottom)); animation: sube .2s ease;
+}
+.sheet .asa { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 4px auto 10px; }
+.sheet-h { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sheet-h .h2 { flex: 1; min-width: 0; }
+@keyframes sube { from { transform: translateY(40px); opacity: .5; } to { transform: none; opacity: 1; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+.toast {
+  position: fixed; left: 16px; right: 16px; bottom: calc(var(--tab-h) + 14px + env(safe-area-inset-bottom)); z-index: 60; max-width: 528px; margin: 0 auto;
+  background: var(--ink); color: var(--bg); padding: 14px 16px; border-radius: 14px; font-weight: 700; font-size: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  animation: sube .2s ease;
+}
+.toast.mal { background: var(--hot); color: #fff; }
+
+/* Línea de tiempo del partido */
+.linea { list-style: none; border-left: 2px solid var(--line); margin-left: 6px; padding-left: 14px; }
+.linea li { position: relative; font-size: 13px; padding: 4px 0; }
+.linea li::before { content: ""; position: absolute; left: -20px; top: 9px; width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.linea li.ok::before { background: var(--ok); }
+.linea li.hot::before { background: var(--hot); }
+.linea li.volt::before { background: var(--volt); }
+
+.vacio { text-align: center; padding: 28px 16px; color: var(--mute); }
+.vacio b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
+.versiones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.versiones .card { padding: 10px; min-width: 0; }
+.versiones .card b { font-size: 12px; display: block; margin-bottom: 4px; }
+.versiones .sets-txt { font-weight: 900; font-size: 18px; font-variant-numeric: tabular-nums; }
+.log { font-size: 13px; padding: 10px 14px; }
+.log + .log { border-top: 1px solid var(--line); }
+.log time { display: block; font-size: 11px; color: var(--mute); font-weight: 700; }
+.avatar { width: 56px; height: 56px; border-radius: 16px; background: var(--volt); color: var(--volt-ink); display: grid; place-items: center; font-weight: 900; font-style: italic; font-size: 22px; flex: none; }
+.lineas-explica { list-style: none; font-size: 14px; }
+.lineas-explica li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.lineas-explica li:last-child { border-bottom: 0; }
+.lineas-explica b { font-variant-numeric: tabular-nums; }
+.pie { text-align: center; color: var(--mute); font-size: 12px; margin-top: 28px; }
+
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%230b0b0c'/%3E%3Cpath d='M7 31 Q 17 1 32 21' fill='none' stroke='%23d4ff00' stroke-width='2.4' stroke-dasharray='3.2 3.2' stroke-linecap='round'/%3E%3Ccircle cx='31' cy='25.5' r='5.2' fill='%23d4ff00'/%3E%3C/svg%3E">
+<script>
+// =====================================================================
+// Configuración de la app. Es lo único que hay que tocar para salir en vivo.
+// - marca: el nombre de la liga (cambialo acá y cambia en toda la app).
+// - supabaseUrl / supabaseAnonKey: de Supabase → Project Settings → API.
+//   Si quedan vacías, la app arranca en MODO DEMO con datos inventados.
+// La "anon key" es pública por diseño: la seguridad la ponen las reglas (RLS)
+// de supabase/schema.sql. NUNCA pegues acá la "service_role" key.
+// =====================================================================
+window.LOB_CONFIG = {
+  marca: 'LOB CUP',
+  lema: 'Liga amateur de pádel · Córdoba',
+  supabaseUrl: '',
+  supabaseAnonKey: '',
+};
+
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="capa"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script>
+"use strict";
+const __logica = (() => {
+// =====================================================================
+// Reglas de la liga (funciones puras, sin pantalla ni base de datos).
+// Son LAS MISMAS reglas que calcula Postgres en supabase/schema.sql
+// (tabla_categoria, ranking_jugadores). Si cambiás una, cambiá la otra
+// y corré: node tests/logica.test.mjs
+// =====================================================================
+
+const CONFIG_BASE = {
+  temporada: 'Temporada 2027',
+  puntos_victoria: 1,          // tabla por pareja: 1 punto por partido ganado (como la liga actual)
+  puntos_derrota: 0,
+  rk_gana_2sets: 100,          // ranking individual (Puntos LOB)
+  rk_gana_stb: 80,
+  rk_pierde_stb: 40,
+  rk_pierde_2sets: 20,
+  rk_wo_favor: 100,
+  rk_wo_contra: -30,
+  horas_autoconfirmar: 24,
+  valor_turno: 36000,
+  monto_sena: 9000,
+  alias: 'lobcup.liga',
+  ventana_dias: 14,
+};
+
+// --------------------------------------------------------------------
+// Sets
+// --------------------------------------------------------------------
+// Sets 1 y 2: 6-0 a 6-4, 7-5 o 7-6. Set 3: súper tie-break a 11, diferencia de 2
+// (11-9, 12-10, 13-11...).
+function setValido(a, b, n) {
+  if (!Number.isInteger(a) || !Number.isInteger(b) || a < 0 || b < 0 || a === b) return false;
+  const g = Math.max(a, b), p = Math.min(a, b);
+  if (n === 3) return g >= 11 && g - p >= 2 && (g === 11 || g - p === 2);
+  return (g === 6 && p <= 4) || (g === 7 && (p === 5 || p === 6));
+}
+
+// sets: [[a,b],[a,b],[a,b]?] desde el punto de vista de la pareja A.
+// Devuelve { ok, error, ganador: 'a'|'b', stb }
+function validarSets(sets) {
+  const s = (sets || []).filter((x) => x && x[0] !== '' && x[0] != null && x[1] !== '' && x[1] != null)
+    .map((x) => [Number(x[0]), Number(x[1])]);
+  if (s.length < 2) return { ok: false, error: 'Cargá al menos los dos primeros sets.' };
+  for (let i = 0; i < 2; i++) {
+    if (!setValido(s[i][0], s[i][1], i + 1)) return { ok: false, error: `El set ${i + 1} (${s[i][0]}-${s[i][1]}) no es válido. Va de 6-0 a 6-4, 7-5 o 7-6.` };
+  }
+  const g1 = s[0][0] > s[0][1] ? 'a' : 'b', g2 = s[1][0] > s[1][1] ? 'a' : 'b';
+  if (g1 === g2) {
+    if (s.length > 2) return { ok: false, error: 'Si una pareja ganó los dos primeros sets, no hay súper tie-break.' };
+    return { ok: true, ganador: g1, stb: false, sets: s };
+  }
+  if (s.length < 3) return { ok: false, error: 'Van 1 set a 1: falta el súper tie-break.' };
+  if (!setValido(s[2][0], s[2][1], 3)) return { ok: false, error: `El súper tie-break (${s[2][0]}-${s[2][1]}) no es válido. Es a 11 con diferencia de 2 (11-9, 12-10...).` };
+  return { ok: true, ganador: s[2][0] > s[2][1] ? 'a' : 'b', stb: true, sets: s.slice(0, 3) };
+}
+
+const SETS_WO = [[6, 0], [6, 0]];
+
+// Sets y games de un partido para la pareja A y la B.
+// Igual que la liga actual: los puntos del súper tie-break suman como games.
+function contarSets(sets) {
+  let sa = 0, sb = 0, ga = 0, gb = 0;
+  for (const [a, b] of sets || []) { ga += a; gb += b; if (a > b) sa++; else sb++; }
+  return { sa, sb, ga, gb };
+}
+
+// Sets dados vuelta (para mostrarlos desde el lado de la pareja B).
+const invertirSets = (sets) => (sets || []).map(([a, b]) => [b, a]);
+const textoSets = (sets) => (sets || []).map(([a, b]) => `${a}-${b}`).join('  ');
+
+// --------------------------------------------------------------------
+// Tabla de posiciones por categoría (por pareja)
+// Orden: 1) puntos 2) dif. sets 3) dif. games 4) enfrentamiento directo
+//        (partidos ganados entre las empatadas) 5) orden de inscripción (id)
+// Solo cuentan partidos CONFIRMADOS. Parejas dadas de baja no aparecen,
+// pero lo que jugaron contra las demás sigue contando.
+// --------------------------------------------------------------------
+function calcularTabla(parejas, partidos, cfg = CONFIG_BASE) {
+  const st = new Map();
+  for (const p of parejas) {
+    if (p.estado !== 'activa') continue;
+    st.set(p.id, { id: p.id, pj: 0, pg: 0, pp: 0, pts: 0, sf: 0, sc: 0, gf: 0, gc: 0, h2h: new Map() });
+  }
+  for (const m of partidos) {
+    if (m.estado !== 'confirmado' || !m.ganador) continue;
+    const { sa, sb, ga, gb } = contarSets(m.sets);
+    const A = st.get(m.a), B = st.get(m.b);
+    const ganoA = m.ganador === m.a;
+    if (A) {
+      A.pj++; A.sf += sa; A.sc += sb; A.gf += ga; A.gc += gb;
+      if (ganoA) { A.pg++; A.pts += cfg.puntos_victoria; A.h2h.set(m.b, (A.h2h.get(m.b) || 0) + 1); } else { A.pp++; A.pts += cfg.puntos_derrota; }
+    }
+    if (B) {
+      B.pj++; B.sf += sb; B.sc += sa; B.gf += gb; B.gc += ga;
+      if (!ganoA) { B.pg++; B.pts += cfg.puntos_victoria; B.h2h.set(m.a, (B.h2h.get(m.a) || 0) + 1); } else { B.pp++; B.pts += cfg.puntos_derrota; }
+    }
+  }
+  const filas = [...st.values()].map((r) => ({ ...r, ds: r.sf - r.sc, dg: r.gf - r.gc }));
+  const clave = (r) => `${r.pts}|${r.ds}|${r.dg}`;
+  // Enfrentamiento directo: partidos ganados contra las otras del mismo grupo de empate.
+  for (const r of filas) {
+    const grupo = filas.filter((o) => o !== r && clave(o) === clave(r));
+    r.dir = grupo.reduce((n, o) => n + (r.h2h.get(o.id) || 0), 0);
+  }
+  filas.sort((x, y) => y.pts - x.pts || y.ds - x.ds || y.dg - x.dg || y.dir - x.dir || cmpId(x.id, y.id));
+  return filas.map((r, i) => {
+    const prev = filas[i - 1];
+    let desempate = null;
+    if (prev && prev.pts === r.pts) {
+      desempate = prev.ds !== r.ds ? 'dif. de sets' : prev.dg !== r.dg ? 'dif. de games' : prev.dir !== r.dir ? 'enfrentamiento directo' : 'orden de inscripción';
+    }
+    const { h2h, ...resto } = r;
+    return { pos: i + 1, ...resto, desempate };
+  });
+}
+
+function cmpId(a, b) {
+  const na = Number(a), nb = Number(b);
+  if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+  return String(a).localeCompare(String(b));
+}
+
+// --------------------------------------------------------------------
+// Puntos LOB (ranking individual)
+// --------------------------------------------------------------------
+function puntosPartido(m, lado, cfg = CONFIG_BASE) {
+  const gano = m.ganador === (lado === 'a' ? m.a : m.b);
+  if (m.wo) return gano ? cfg.rk_wo_favor : cfg.rk_wo_contra;
+  const stb = (m.sets || []).length >= 3;
+  if (gano) return stb ? cfg.rk_gana_stb : cfg.rk_gana_2sets;
+  return stb ? cfg.rk_pierde_stb : cfg.rk_pierde_2sets;
+}
+
+// Orden cronológico de un partido confirmado (fecha del fixture y después cuándo se confirmó).
+const ordenCrono = (x, y) => x.fecha - y.fecha || (x.confirmado_at || 0) - (y.confirmado_at || 0) || cmpId(x.id, y.id);
+
+// Ranking de jugadores. Orden: puntos, ganados, dif. sets, dif. games, nombre.
+function calcularRanking(jugadores, parejas, partidos, cfg = CONFIG_BASE) {
+  const parejaDe = new Map(parejas.map((p) => [p.id, p]));
+  const st = new Map(jugadores.map((j) => [j.id, { id: j.id, nombre: j.nombre, pts: 0, pj: 0, pg: 0, pp: 0, sf: 0, sc: 0, gf: 0, gc: 0, historial: [] }]));
+  const conf = partidos.filter((m) => m.estado === 'confirmado' && m.ganador).sort(ordenCrono);
+  for (const m of conf) {
+    const { sa, sb, ga, gb } = contarSets(m.sets);
+    for (const lado of ['a', 'b']) {
+      const p = parejaDe.get(m[lado]);
+      if (!p) continue;
+      const gano = m.ganador === m[lado];
+      const pts = puntosPartido(m, lado, cfg);
+      for (const jid of [p.jugador1, p.jugador2]) {
+        const r = jid && st.get(jid);
+        if (!r) continue;
+        r.pj++; if (gano) r.pg++; else r.pp++;
+        r.pts += pts;
+        r.sf += lado === 'a' ? sa : sb; r.sc += lado === 'a' ? sb : sa;
+        r.gf += lado === 'a' ? ga : gb; r.gc += lado === 'a' ? gb : ga;
+        r.historial.push(gano ? 'G' : 'P');
+      }
+    }
+  }
+  const filas = [...st.values()].map((r) => ({ ...r, ds: r.sf - r.sc, dg: r.gf - r.gc, racha: racha(r.historial), ultimos: r.historial.slice(-5) }));
+  filas.sort((x, y) => y.pts - x.pts || y.pg - x.pg || y.ds - x.ds || y.dg - x.dg || x.nombre.localeCompare(y.nombre, 'es'));
+  return filas.map((r, i) => ({ pos: i + 1, ...r }));
+}
+
+// Racha actual: { tipo: 'G'|'P', n } o null.
+function racha(historial) {
+  if (!historial.length) return null;
+  const tipo = historial[historial.length - 1];
+  let n = 0;
+  for (let i = historial.length - 1; i >= 0 && historial[i] === tipo; i--) n++;
+  return { tipo, n };
+}
+
+// --------------------------------------------------------------------
+// Fixture: todos contra todos, método del círculo (igual que la liga actual).
+// Devuelve [[{a,b},...], ...] (una lista por fecha). Si son impares, una queda libre.
+// --------------------------------------------------------------------
+function roundRobin(ids) {
+  const arr = ids.slice();
+  if (arr.length % 2) arr.push(null);
+  const n = arr.length, rondas = [];
+  for (let r = 0; r < n - 1; r++) {
+    const ronda = [];
+    for (let i = 0; i < n / 2; i++) {
+      const a = arr[i], b = arr[n - 1 - i];
+      if (a != null && b != null) ronda.push({ a, b });
+    }
+    rondas.push(ronda);
+    const ultimo = arr[n - 1];
+    for (let j = n - 1; j > 1; j--) arr[j] = arr[j - 1];
+    arr[1] = ultimo;
+  }
+  return rondas;
+}
+
+// --------------------------------------------------------------------
+// Auto-confirmación: resultados "por confirmar" vencidos pasan a confirmados.
+// --------------------------------------------------------------------
+function vencidos(partidos, ahora = Date.now()) {
+  return partidos.filter((m) => m.estado === 'por_confirmar' && m.vence_at && m.vence_at <= ahora);
+}
+
+// --------------------------------------------------------------------
+// WhatsApp: celular argentino → link wa.me
+// --------------------------------------------------------------------
+function numeroWhatsApp(tel) {
+  let d = String(tel || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.startsWith('549')) return d;
+  if (d.startsWith('54')) return '549' + d.slice(2);
+  if (d.startsWith('0')) d = d.slice(1);
+  d = d.replace(/^(\d{2,4})15(\d{6,8})$/, '$1$2'); // 0351 15 xxxxxxx
+  if (d.length === 7) d = '351' + d;               // sin característica → Córdoba
+  return '549' + d;
+}
+function linkWhatsApp(tel, texto = '') {
+  const n = numeroWhatsApp(tel);
+  return n ? `https://wa.me/${n}${texto ? '?text=' + encodeURIComponent(texto) : ''}` : '';
+}
+
+// --------------------------------------------------------------------
+// Resumen de una fecha: lo más destacado.
+// --------------------------------------------------------------------
+function resumenFecha(partidos, fecha) {
+  const conf = partidos.filter((m) => m.fecha === fecha && m.estado === 'confirmado' && !m.wo);
+  const total = partidos.filter((m) => m.fecha === fecha).length;
+  let paliza = null, partidazo = null;
+  for (const m of conf) {
+    const { ga, gb } = contarSets(m.sets);
+    const dif = Math.abs(ga - gb);
+    const stb = m.sets.length >= 3;
+    if (!stb && (!paliza || dif > paliza.dif)) paliza = { partido: m, dif };
+    if (stb) {
+      const [x, y] = m.sets[2];
+      const ajuste = Math.abs(x - y);
+      if (!partidazo || ajuste < partidazo.ajuste) partidazo = { partido: m, ajuste };
+    }
+  }
+  return { fecha, jugados: partidos.filter((m) => m.fecha === fecha && m.estado === 'confirmado').length, total, paliza, partidazo, stbs: conf.filter((m) => m.sets.length >= 3).length };
+}
+
+// Fecha local AAAA-MM-DD (para reservas).
+const fechaISO = (ms) => { const d = new Date(ms); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+
+return { CONFIG_BASE, setValido, validarSets, SETS_WO, contarSets, invertirSets, textoSets, calcularTabla, puntosPartido, calcularRanking, racha, roundRobin, vencidos, numeroWhatsApp, linkWhatsApp, resumenFecha, fechaISO };
+})();
+
+const __datos_demo = (() => {
+// =====================================================================
+// Modo DEMO: la liga entera vive en memoria (y en localStorage si se puede).
+// Hace las mismas validaciones que las funciones de supabase/schema.sql,
+// así lo que se ve en la demo es lo que va a pasar con la base real.
+// Todos los nombres y teléfonos son INVENTADOS.
+// =====================================================================
+const { CONFIG_BASE, validarSets, SETS_WO, roundRobin, vencidos, fechaISO } = __logica;
+const CLAVE = 'lobcup-demo-v1';
+const HORA = 3600e3, DIA = 24 * HORA;
+
+const NOMBRES_M = ['Tomás', 'Bruno', 'Joaquín', 'Facundo', 'Nicolás', 'Matías', 'Lucas', 'Santiago', 'Franco', 'Agustín', 'Ignacio', 'Martín',
+  'Gonzalo', 'Emiliano', 'Federico', 'Julián', 'Lautaro', 'Ramiro', 'Valentín', 'Iván', 'Diego', 'Pablo', 'Rodrigo', 'Leandro'];
+const NOMBRES_F = ['Sofía', 'Valentina', 'Camila', 'Lucía', 'Martina', 'Julieta', 'Florencia', 'Agustina', 'Micaela', 'Carolina', 'Paula', 'Victoria',
+  'Rocío', 'Belén', 'Milagros', 'Emilia', 'Daniela', 'Natalia', 'Romina', 'Celeste', 'Josefina', 'Candela', 'Pilar', 'Abril'];
+const APELLIDOS = ['Arce', 'Villalba', 'Ferreyra', 'Bustamante', 'Peralta', 'Ledesma', 'Correa', 'Molina', 'Vera', 'Ojeda', 'Funes', 'Paz',
+  'Godoy', 'Rivas', 'Toledo', 'Acosta', 'Maldonado', 'Herrera', 'Navarro', 'Ponce', 'Rojas', 'Benítez', 'Cáceres', 'Aguirre',
+  'Luna', 'Moreno', 'Figueroa', 'Castro', 'Vega', 'Suárez', 'Juárez', 'Gallardo', 'Miranda', 'Lucero', 'Bravo', 'Cabrera',
+  'Heredia', 'Ríos', 'Ortiz', 'Agüero', 'Montes', 'Salinas', 'Torres', 'Bazán', 'Campos', 'Guzmán', 'Olmos', 'Barrera'];
+
+const CATEGORIAS_BASE = [
+  { id: 1, nombre: '6.ª Masculino', nivel: 6, genero: 'M', orden: 1 },
+  { id: 2, nombre: '7.ª Masculino', nivel: 7, genero: 'M', orden: 2 },
+  { id: 3, nombre: '8.ª Masculino', nivel: 8, genero: 'M', orden: 3 },
+  { id: 4, nombre: '6.ª Femenino', nivel: 6, genero: 'F', orden: 4 },
+  { id: 5, nombre: '7.ª Femenino', nivel: 7, genero: 'F', orden: 5 },
+  { id: 6, nombre: '8.ª Femenino', nivel: 8, genero: 'F', orden: 6 },
+];
+
+// Grilla de la liga actual (sin las mañanas de martes y jueves; con sábado a la tarde y 22:30 a 00:00).
+const TURNOS_BASE = (() => {
+  const t = []; let id = 0;
+  for (let dia = 1; dia <= 5; dia++) {
+    for (const [inicio, fin, canchas] of [['18:00', '19:30', 2], ['19:30', '21:00', 2], ['21:00', '22:30', 3], ['22:30', '24:00', 3]]) t.push({ id: ++id, dia, inicio, fin, canchas });
+  }
+  for (const [inicio, fin] of [['09:30', '11:00'], ['11:00', '12:30'], ['16:00', '17:30'], ['17:30', '19:00']]) t.push({ id: ++id, dia: 6, inicio, fin, canchas: 3 });
+  return t;
+})();
+
+function prng(semilla) {
+  let a = semilla >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+
+// ---------------------------------------------------------------------
+// Liga de ejemplo: 6 categorías × 8 parejas = 48 parejas, fixture de 7 fechas,
+// fechas 1 a 4 jugadas, la 5 a medias, el resto por jugar.
+// ---------------------------------------------------------------------
+function generarLiga(ahora = Date.now()) {
+  const r = prng(20270314);
+  const elegir = (arr) => arr[Math.floor(r() * arr.length)];
+  const jugadores = [], parejas = [], partidos = [], reservas = [], actividad = [];
+  let jid = 0, pid = 0, mid = 0, rid = 0, aid = 0;
+  const fuerza = new Map();
+  for (const cat of CATEGORIAS_BASE) {
+    const nombres = cat.genero === 'M' ? NOMBRES_M : NOMBRES_F;
+    for (let k = 0; k < 8; k++) {
+      const par = [];
+      for (let s = 0; s < 2; s++) {
+        const i = ((cat.id - 1) % 3) * 16 + k * 2 + s;         // 48 combinaciones distintas por género
+        const ape = APELLIDOS[(i + (cat.genero === 'F' ? 7 : 0)) % APELLIDOS.length];
+        jid++;
+        jugadores.push({ id: 'j' + jid, nombre: nombres[i % nombres.length], apellido: ape, telefono: '351000' + String(1000 + jid).slice(-4), genero: cat.genero, rol: 'jugador' });
+        par.push('j' + jid);
+      }
+      pid++;
+      parejas.push({ id: pid, categoria_id: cat.id, jugador1: par[0], jugador2: par[1], estado: 'activa', creado_at: ahora - 60 * DIA + pid * 1000 });
+      fuerza.set(pid, r());
+    }
+  }
+  // Organizador
+  jugadores.push({ id: 'org', nombre: 'Organización', apellido: '', telefono: '3510000000', genero: null, rol: 'organizador' });
+
+  const YO = 'j17', MI_PAREJA = 9;                 // Lautaro Godoy · 7.ª Masculino (pareja 9 con Ramiro Rivas)
+  const inicioFecha = (f) => ahora - (5 - f) * 7 * DIA - 2 * DIA;   // fecha 5 = esta semana
+  const SETS_GANA = [[6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 4], [7, 5], [7, 6], [6, 3], [6, 2]];
+  const setGanado = (ganaA) => { const [x, y] = elegir(SETS_GANA); return ganaA ? [x, y] : [y, x]; };
+  function resultado(a, b) {
+    const pa = 0.5 + (fuerza.get(a) - fuerza.get(b)) * 0.6;
+    const ganaA = r() < pa;
+    if (r() < 0.68) return { ganaA, sets: [setGanado(ganaA), setGanado(ganaA)] };
+    const primero = r() < 0.5;
+    const s3 = r() < 0.85 ? [11, Math.floor(r() * 10)] : [12, 10];
+    return { ganaA, sets: [setGanado(primero ? ganaA : !ganaA), setGanado(primero ? !ganaA : ganaA), ganaA ? s3 : [s3[1], s3[0]]] };
+  }
+
+  for (const cat of CATEGORIAS_BASE) {
+    const ids = parejas.filter((p) => p.categoria_id === cat.id).map((p) => p.id);
+    roundRobin(ids).forEach((ronda, i) => {
+      const fecha = i + 1;
+      ronda.forEach(({ a, b }, j) => {
+        mid++;
+        const m = { id: mid, categoria_id: cat.id, fecha, a, b, estado: 'pendiente', sets: [], wo: false, ganador: null,
+          cargado_por: null, cargado_pareja: null, cargado_at: null, vence_at: null, confirmado_por: null, confirmado_at: null,
+          confirmado_via: null, disputa_motivo: null, disputa_sets: null, disputa_por: null, disputa_at: null, editado_por_org: false };
+        const dia = inicioFecha(fecha) + j * 0.7 * DIA;
+        const jugado = fecha <= 4 || (fecha === 5 && j < 2);
+        if (jugado) {
+          const res = resultado(a, b);
+          const cargo = res.ganaA ? a : b;
+          Object.assign(m, { estado: 'confirmado', sets: res.sets, ganador: res.ganaA ? a : b, cargado_pareja: cargo,
+            cargado_por: parejas.find((p) => p.id === cargo).jugador1, cargado_at: dia + 2 * HORA, vence_at: dia + 26 * HORA,
+            confirmado_at: dia + (r() < 0.8 ? 5 : 26) * HORA, confirmado_via: 'rival' });
+          m.confirmado_via = m.confirmado_at - m.cargado_at >= 24 * HORA ? 'auto' : 'rival';
+          const rival = cargo === a ? b : a;
+          m.confirmado_por = m.confirmado_via === 'rival' ? parejas.find((p) => p.id === rival).jugador2 : null;
+        }
+        if (fecha >= 5 && fecha <= 6 && !jugado) {
+          // Algunas reservas hechas para esta semana y la que viene
+          if (r() < 0.55 && !(m.a === MI_PAREJA || m.b === MI_PAREJA)) {
+            const base = new Date(ahora + (fecha === 5 ? 1 : 6) * DIA + j * DIA);
+            const dow = base.getDay();
+            const opciones = TURNOS_BASE.filter((t) => t.dia === dow);
+            if (opciones.length) {
+              const t = opciones[j % opciones.length];
+              rid++;
+              reservas.push({ id: rid, partido_id: mid, fecha: fechaISO(base.getTime()), inicio: t.inicio, fin: t.fin, cancha: 1 + (rid % t.canchas),
+                estado: r() < 0.5 ? 'confirmada' : 'pendiente', creada_por: parejas.find((p) => p.id === a).jugador1, creada_at: ahora - DIA });
+            }
+          }
+        }
+        partidos.push(m);
+      });
+    });
+  }
+
+  // Escenas armadas para mostrar el flujo:
+  const enCat = (c) => partidos.filter((m) => m.categoria_id === c);
+  const mios = partidos.filter((m) => m.a === MI_PAREJA || m.b === MI_PAREJA);
+  const rivalDe = (m) => (m.a === MI_PAREJA ? m.b : m.a);
+  // 1) Mi fecha 5: el rival cargó el resultado y me toca confirmar.
+  const m5 = mios.find((m) => m.fecha === 5);
+  if (m5) {
+    const res = resultado(m5.a, m5.b);
+    const riv = rivalDe(m5);
+    Object.assign(m5, { estado: 'por_confirmar', sets: res.sets, ganador: res.ganaA ? m5.a : m5.b, cargado_pareja: riv,
+      cargado_por: parejas.find((p) => p.id === riv).jugador1, cargado_at: ahora - 3 * HORA, vence_at: ahora + 21 * HORA,
+      confirmado_at: null, confirmado_via: null, confirmado_por: null });
+  }
+  // 2) Una disputa en mi categoría para que la resuelva el organizador.
+  const disp = enCat(2).find((m) => m.fecha === 5 && m.estado === 'pendiente' && m !== m5);
+  if (disp) for (let i = reservas.length - 1; i >= 0; i--) if (reservas[i].partido_id === disp.id) reservas.splice(i, 1);
+  if (disp) {
+    const quien = disp.a;
+    Object.assign(disp, { estado: 'en_disputa', sets: [[6, 4], [3, 6], [11, 8]], ganador: disp.a, cargado_pareja: quien,
+      cargado_por: parejas.find((p) => p.id === quien).jugador1, cargado_at: ahora - 20 * HORA, vence_at: ahora + 4 * HORA,
+      disputa_motivo: 'El súper tie-break terminó 11-9 para nosotros, no 11-8 para ellos.', disputa_sets: [[6, 4], [3, 6], [9, 11]],
+      disputa_por: parejas.find((p) => p.id === disp.b).jugador1, disputa_at: ahora - 18 * HORA });
+  }
+  // 3) Otros resultados esperando confirmación en otras categorías.
+  for (const c of [1, 4, 6]) {
+    const m = enCat(c).find((x) => x.fecha === 5 && x.estado === 'pendiente');
+    if (m) {
+      const res = resultado(m.a, m.b); const cargo = res.ganaA ? m.a : m.b;
+      Object.assign(m, { estado: 'por_confirmar', sets: res.sets, ganador: cargo, cargado_pareja: cargo,
+        cargado_por: parejas.find((p) => p.id === cargo).jugador1, cargado_at: ahora - 10 * HORA, vence_at: ahora + 14 * HORA });
+    }
+  }
+  // 4) Una pareja esperando compañero (inscripción abierta) en 8.ª Femenino.
+  jid++;
+  jugadores.push({ id: 'j' + jid, nombre: 'Clara', apellido: 'Sarmiento', telefono: '351000' + String(1000 + jid).slice(-4), genero: 'F', rol: 'jugador' });
+  pid++;
+  parejas.push({ id: pid, categoria_id: 6, jugador1: 'j' + jid, jugador2: null, estado: 'activa', codigo: 'LOB7K2', creado_at: ahora - DIA });
+
+  for (const m of partidos.filter((x) => x.estado !== 'pendiente').sort((x, y) => (x.cargado_at || 0) - (y.cargado_at || 0)).slice(-25)) {
+    actividad.push({ id: ++aid, at: m.cargado_at, actor: m.cargado_por, tipo: 'resultado_cargado', partido_id: m.id, detalle: { sets: m.sets } });
+    if (m.estado === 'confirmado') actividad.push({ id: ++aid, at: m.confirmado_at, actor: m.confirmado_por, tipo: m.confirmado_via === 'auto' ? 'resultado_autoconfirmado' : 'resultado_confirmado', partido_id: m.id, detalle: {} });
+    if (m.estado === 'en_disputa') actividad.push({ id: ++aid, at: m.disputa_at, actor: m.disputa_por, tipo: 'resultado_disputado', partido_id: m.id, detalle: { motivo: m.disputa_motivo } });
+  }
+  actividad.sort((x, y) => y.at - x.at);
+
+  return {
+    version: 1,
+    config: { ...CONFIG_BASE, whatsapp_org: '3510000000' },
+    categorias: CATEGORIAS_BASE.map((c) => ({ ...c, inscripcion_abierta: true, fecha_en_juego: null })),
+    jugadores, parejas, partidos, turnos: TURNOS_BASE.map((t) => ({ ...t })), reservas, actividad,
+    yo: YO, ids: { jid, pid, mid, rid, aid },
+  };
+}
+
+// ---------------------------------------------------------------------
+// Capa de datos DEMO (misma interfaz que datos-supabase.js)
+// ---------------------------------------------------------------------
+function leerGuardado() {
+  try { const t = localStorage.getItem(CLAVE); if (t) { const d = JSON.parse(t); if (d && d.version === 1) return d; } } catch (e) { /* sin localStorage */ }
+  return null;
+}
+function guardar(db) { try { localStorage.setItem(CLAVE, JSON.stringify(db)); } catch (e) { /* sin localStorage: queda en memoria */ } }
+
+function crearDemo() {
+  let db = leerGuardado() || generarLiga();
+  const fallar = (msg) => { throw new Error(msg); };
+  const ahora = () => Date.now();
+  const yo = () => db.yo;
+  const esOrg = () => (db.jugadores.find((j) => j.id === db.yo) || {}).rol === 'organizador';
+  const partido = (id) => db.partidos.find((m) => m.id === Number(id)) || fallar('Ese partido no existe.');
+  const pareja = (id) => db.parejas.find((p) => p.id === id);
+  const miParejaEn = (m, uid = yo()) => [m.a, m.b].find((id) => { const p = pareja(id); return p && (p.jugador1 === uid || p.jugador2 === uid); }) || null;
+  const log = (tipo, partido_id, detalle = {}, actor = yo()) => { db.actividad.unshift({ id: ++db.ids.aid, at: ahora(), actor, tipo, partido_id, detalle }); db.actividad = db.actividad.slice(0, 300); };
+  const soloOrg = () => { if (!esOrg()) fallar('Solo el organizador.'); };
+  const fin = () => { guardar(db); return true; };
+
+  function autoconfirmar() {
+    const v = vencidos(db.partidos, ahora());
+    for (const m of v) { Object.assign(m, { estado: 'confirmado', confirmado_at: ahora(), confirmado_via: 'auto', confirmado_por: null }); log('resultado_autoconfirmado', m.id, {}, null); }
+    if (v.length) guardar(db);
+    return v.length;
+  }
+
+  function cargarResultado(id, sets, wo = false, uid = yo()) {
+    const m = partido(id);
+    const mi = miParejaEn(m, uid);
+    if (!mi) fallar('Solo pueden cargar el resultado los que juegan el partido.');
+    if ([m.a, m.b].some((p) => pareja(p).estado !== 'activa')) fallar('Una de las parejas está dada de baja. Lo resuelve el organizador.');
+    if (m.estado === 'confirmado') fallar('Este resultado ya está confirmado. Si hay un error, avisale al organizador.');
+    if (m.estado === 'en_disputa') fallar('Este resultado está en revisión del organizador.');
+    if (m.estado === 'por_confirmar' && m.cargado_pareja !== mi) fallar('Tu rival ya cargó el resultado: confirmalo o marcá que no es así.');
+    let ganador;
+    if (wo) { sets = mi === m.a ? SETS_WO.map((s) => [...s]) : SETS_WO.map(([x, y]) => [y, x]); ganador = mi; }
+    else { const v = validarSets(sets); if (!v.ok) fallar(v.error); sets = v.sets; ganador = v.ganador === 'a' ? m.a : m.b; }
+    Object.assign(m, { estado: 'por_confirmar', sets, wo: !!wo, ganador, cargado_por: uid, cargado_pareja: mi, cargado_at: ahora(),
+      vence_at: ahora() + db.config.horas_autoconfirmar * HORA, confirmado_por: null, confirmado_at: null, confirmado_via: null,
+      disputa_motivo: null, disputa_sets: null, disputa_por: null, disputa_at: null });
+    log(wo ? 'wo_cargado' : 'resultado_cargado', m.id, { sets }, uid);
+    return fin();
+  }
+  function confirmarResultado(id, uid = yo()) {
+    const m = partido(id);
+    if (m.estado !== 'por_confirmar') fallar('Este resultado no está esperando confirmación.');
+    const mi = miParejaEn(m, uid);
+    if (!mi || mi === m.cargado_pareja) fallar('Lo confirma la pareja rival de la que lo cargó.');
+    Object.assign(m, { estado: 'confirmado', confirmado_por: uid, confirmado_at: ahora(), confirmado_via: 'rival' });
+    log('resultado_confirmado', m.id, {}, uid);
+    return fin();
+  }
+  function disputarResultado(id, motivo, sets = null, uid = yo()) {
+    const m = partido(id);
+    if (m.estado !== 'por_confirmar') fallar('Este resultado no está esperando confirmación.');
+    const mi = miParejaEn(m, uid);
+    if (!mi || mi === m.cargado_pareja) fallar('Lo puede objetar la pareja rival de la que lo cargó.');
+    let propuesta = null;
+    if (sets && sets.some((s) => s && s[0] !== '' && s[0] != null)) { const v = validarSets(sets); if (!v.ok) fallar(v.error); propuesta = v.sets; }
+    Object.assign(m, { estado: 'en_disputa', disputa_motivo: String(motivo || '').slice(0, 300), disputa_sets: propuesta, disputa_por: uid, disputa_at: ahora() });
+    log('resultado_disputado', m.id, { motivo }, uid);
+    return fin();
+  }
+  function reservarTurno(id, fecha, inicio, uid = yo()) {
+    const m = partido(id);
+    if (!miParejaEn(m, uid) && !esOrg()) fallar('Solo reservan los que juegan el partido.');
+    if (m.estado === 'confirmado') fallar('Este partido ya se jugó.');
+    const hoy = fechaISO(ahora());
+    const max = fechaISO(ahora() + db.config.ventana_dias * DIA);
+    if (fecha < hoy || fecha > max) fallar(`Se reserva de hoy a ${db.config.ventana_dias} días.`);
+    if (new Date(`${fecha}T${inicio}:00`).getTime() <= ahora()) fallar('Ese horario ya pasó.');
+    const dow = new Date(`${fecha}T12:00:00`).getDay();
+    const t = db.turnos.find((x) => x.dia === dow && x.inicio === inicio) || fallar('Ese horario no está en la grilla de la liga.');
+    if (db.reservas.some((x) => x.partido_id === m.id && x.estado !== 'cancelada')) fallar('Este partido ya tiene un turno. Cancelalo antes de pedir otro.');
+    let libre = null;
+    for (let c = 1; c <= t.canchas; c++) if (!db.reservas.some((x) => x.fecha === fecha && x.inicio === inicio && x.cancha === c && x.estado !== 'cancelada')) { libre = c; break; }
+    if (!libre) fallar('Ese turno se llenó. Elegí otro.');
+    db.reservas.push({ id: ++db.ids.rid, partido_id: m.id, fecha, inicio, fin: t.fin, cancha: libre, estado: 'pendiente', creada_por: uid, creada_at: ahora() });
+    log('turno_reservado', m.id, { fecha, inicio, cancha: libre }, uid);
+    return fin();
+  }
+  function cancelarReserva(rid) {
+    const r = db.reservas.find((x) => x.id === Number(rid) && x.estado !== 'cancelada') || fallar('Esa reserva no existe.');
+    if (!esOrg()) {
+      if (!miParejaEn(partido(r.partido_id))) fallar('Solo la cancelan los que juegan el partido.');
+      if (r.estado === 'confirmada') fallar('El turno ya está confirmado: para cancelarlo hablá con el organizador.');
+    }
+    r.estado = 'cancelada';
+    log('turno_cancelado', r.partido_id, { reserva: r.id });
+    return fin();
+  }
+  function crearPareja(categoriaId) {
+    const c = db.categorias.find((x) => x.id === Number(categoriaId)) || fallar('Esa categoría no existe.');
+    if (!c.inscripcion_abierta) fallar(`La inscripción de ${c.nombre} está cerrada.`);
+    const j = db.jugadores.find((x) => x.id === yo());
+    if (j.genero && j.genero !== c.genero) fallar('Esa categoría es de otro género.');
+    if (db.parejas.some((p) => p.categoria_id === c.id && p.estado === 'activa' && (p.jugador1 === yo() || p.jugador2 === yo()))) fallar('Ese jugador ya tiene pareja en esta categoría.');
+    const codigo = Math.random().toString(36).slice(2, 8).toUpperCase();
+    db.parejas.push({ id: ++db.ids.pid, categoria_id: c.id, jugador1: yo(), jugador2: null, estado: 'activa', codigo, creado_at: ahora() });
+    log('pareja_creada', null, { pareja: db.ids.pid });
+    fin();
+    return codigo;
+  }
+  function unirmeAPareja(codigo) {
+    const p = db.parejas.find((x) => x.codigo && x.codigo === String(codigo || '').trim().toUpperCase()) || fallar('Ese código no existe.');
+    if (p.estado !== 'activa' || p.jugador2) fallar('Esa pareja ya está completa.');
+    if (p.jugador1 === yo()) fallar('No podés ser tu propio compañero.');
+    const c = db.categorias.find((x) => x.id === p.categoria_id);
+    const j = db.jugadores.find((x) => x.id === yo());
+    if (j.genero && j.genero !== c.genero) fallar('Esa categoría es de otro género.');
+    if (db.parejas.some((x) => x.categoria_id === c.id && x.estado === 'activa' && (x.jugador1 === yo() || x.jugador2 === yo()))) fallar('Ese jugador ya tiene pareja en esta categoría.');
+    p.jugador2 = yo(); delete p.codigo;
+    log('pareja_completa', null, { pareja: p.id });
+    return fin();
+  }
+  function actualizarPerfil(datos) {
+    const j = db.jugadores.find((x) => x.id === yo());
+    for (const k of ['nombre', 'apellido', 'telefono']) if (datos[k] != null) j[k] = String(datos[k]).slice(0, k === 'telefono' ? 30 : 60);
+    return fin();
+  }
+  // --- organizador
+  function fijarResultado(id, sets, wo = false, ganadorWo = null) {
+    soloOrg();
+    const m = partido(id);
+    const antes = m.estado;
+    let ganador;
+    if (wo) {
+      if (![m.a, m.b].includes(Number(ganadorWo))) fallar('Elegí quién gana por W.O.');
+      ganador = Number(ganadorWo); sets = ganador === m.a ? SETS_WO.map((s) => [...s]) : SETS_WO.map(([x, y]) => [y, x]);
+    } else { const v = validarSets(sets); if (!v.ok) fallar(v.error); sets = v.sets; ganador = v.ganador === 'a' ? m.a : m.b; }
+    Object.assign(m, { estado: 'confirmado', sets, wo: !!wo, ganador, confirmado_por: yo(), confirmado_at: ahora(), confirmado_via: 'organizador', editado_por_org: true, cargado_at: m.cargado_at || ahora() });
+    log('resultado_fijado_org', m.id, { sets, antes });
+    return fin();
+  }
+  function anularResultado(id) {
+    soloOrg();
+    const m = partido(id);
+    Object.assign(m, { estado: 'pendiente', sets: [], wo: false, ganador: null, cargado_por: null, cargado_pareja: null, cargado_at: null, vence_at: null,
+      confirmado_por: null, confirmado_at: null, confirmado_via: null, disputa_motivo: null, disputa_sets: null, disputa_por: null, disputa_at: null });
+    log('resultado_anulado', m.id);
+    return fin();
+  }
+  function bajaPareja(pid) {
+    soloOrg();
+    const p = pareja(Number(pid)) || fallar('Esa pareja no existe.');
+    p.estado = 'baja';
+    let n = 0;
+    for (const m of db.partidos) {
+      if ((m.a === p.id || m.b === p.id) && m.estado !== 'confirmado') {
+        const gana = m.a === p.id ? m.b : m.a;
+        Object.assign(m, { estado: 'confirmado', wo: true, ganador: gana, sets: gana === m.a ? SETS_WO.map((s) => [...s]) : SETS_WO.map(([x, y]) => [y, x]),
+          confirmado_por: yo(), confirmado_at: ahora(), confirmado_via: 'organizador', editado_por_org: true });
+        for (const r of db.reservas) if (r.partido_id === m.id && r.estado !== 'cancelada') r.estado = 'cancelada';
+        n++;
+      }
+    }
+    log('pareja_baja', null, { pareja: p.id, wo: n });
+    fin();
+    return n;
+  }
+  function generarFixture(catId) {
+    soloOrg();
+    const c = Number(catId);
+    const ids = db.parejas.filter((p) => p.categoria_id === c && p.estado === 'activa' && p.jugador2).map((p) => p.id).sort((x, y) => x - y);
+    if (ids.length < 2) fallar('Hacen falta al menos 2 parejas completas.');
+    if (db.partidos.some((m) => m.categoria_id === c && m.estado !== 'pendiente')) fallar('La categoría ya tiene resultados: no se puede rearmar el fixture.');
+    const viejos = new Set(db.partidos.filter((m) => m.categoria_id === c).map((m) => m.id));
+    db.partidos = db.partidos.filter((m) => !viejos.has(m.id));
+    db.reservas = db.reservas.filter((r) => !viejos.has(r.partido_id));
+    let total = 0;
+    roundRobin(ids).forEach((ronda, i) => ronda.forEach(({ a, b }) => {
+      db.partidos.push({ id: ++db.ids.mid, categoria_id: c, fecha: i + 1, a, b, estado: 'pendiente', sets: [], wo: false, ganador: null, cargado_por: null, cargado_pareja: null,
+        cargado_at: null, vence_at: null, confirmado_por: null, confirmado_at: null, confirmado_via: null, disputa_motivo: null, disputa_sets: null, disputa_por: null, disputa_at: null, editado_por_org: false });
+      total++;
+    }));
+    log('fixture_generado', null, { categoria: c, partidos: total });
+    fin();
+    return total;
+  }
+  function confirmarReserva(rid) {
+    soloOrg();
+    const r = db.reservas.find((x) => x.id === Number(rid) && x.estado === 'pendiente') || fallar('Esa reserva no está pendiente.');
+    r.estado = 'confirmada';
+    log('turno_confirmado', r.partido_id);
+    return fin();
+  }
+  function guardarConfig(cambios) {
+    soloOrg();
+    for (const k of Object.keys(CONFIG_BASE)) {
+      if (cambios[k] === undefined) continue;
+      db.config[k] = typeof CONFIG_BASE[k] === 'number' ? Number(cambios[k]) : String(cambios[k]);
+    }
+    if (!(db.config.horas_autoconfirmar >= 1 && db.config.horas_autoconfirmar <= 168)) { db.config.horas_autoconfirmar = 24; fallar('Las horas para autoconfirmar van de 1 a 168.'); }
+    log('config_cambiada', null, cambios);
+    return fin();
+  }
+  function guardarTurno(t) {
+    soloOrg();
+    if (t.borrar) { db.turnos = db.turnos.filter((x) => x.id !== t.id); return fin(); }
+    if (!/^\d\d:\d\d$/.test(t.inicio) || !/^\d\d:\d\d$/.test(t.fin)) fallar('Horario inválido (HH:MM).');
+    if (db.turnos.some((x) => x.dia === Number(t.dia) && x.inicio === t.inicio && x.id !== t.id)) fallar('Ya hay un turno ese día a esa hora.');
+    db.turnos.push({ id: Math.max(0, ...db.turnos.map((x) => x.id)) + 1, dia: Number(t.dia), inicio: t.inicio, fin: t.fin, canchas: Math.max(1, Number(t.canchas) || 1) });
+    db.turnos.sort((x, y) => x.dia - y.dia || x.inicio.localeCompare(y.inicio));
+    return fin();
+  }
+  function agregarPareja(catId, n1, n2) {
+    soloOrg();
+    const c = db.categorias.find((x) => x.id === Number(catId)) || fallar('Esa categoría no existe.');
+    const nuevo = (txt) => {
+      const [nombre, ...resto] = String(txt || '').trim().split(/\s+/);
+      if (!nombre) fallar('Escribí nombre y apellido de los dos.');
+      const id = 'j' + (++db.ids.jid);
+      db.jugadores.push({ id, nombre, apellido: resto.join(' '), telefono: '', genero: c.genero, rol: 'jugador' });
+      return id;
+    };
+    db.parejas.push({ id: ++db.ids.pid, categoria_id: c.id, jugador1: nuevo(n1), jugador2: nuevo(n2), estado: 'activa', creado_at: ahora() });
+    log('pareja_creada', null, { pareja: db.ids.pid });
+    return fin();
+  }
+  function cambiarInscripcion(catId, abierta) { soloOrg(); db.categorias.find((x) => x.id === Number(catId)).inscripcion_abierta = !!abierta; return fin(); }
+  function cambiarFechaEnJuego(catId, f) { soloOrg(); db.categorias.find((x) => x.id === Number(catId)).fecha_en_juego = f ? Number(f) : null; return fin(); }
+
+  return {
+    modo: 'demo',
+    async cargar() { autoconfirmar(); return structuredClone({ ...db, ahora: ahora() }); },
+    async sesion() { return { id: db.yo }; },
+    async entrar() { return true; }, async registrarse() { return true; }, async linkMagico() { return true; }, async salir() { return true; },
+    async cargarResultado(id, sets, wo) { return cargarResultado(id, sets, wo); },
+    async confirmarResultado(id) { return confirmarResultado(id); },
+    async disputarResultado(id, motivo, sets) { return disputarResultado(id, motivo, sets); },
+    async reservarTurno(id, fecha, inicio) { return reservarTurno(id, fecha, inicio); },
+    async cancelarReserva(rid) { return cancelarReserva(rid); },
+    async crearPareja(c) { return crearPareja(c); },
+    async unirmeAPareja(c) { return unirmeAPareja(c); },
+    async actualizarPerfil(d) { return actualizarPerfil(d); },
+    org: {
+      async fijarResultado(id, sets, wo, g) { return fijarResultado(id, sets, wo, g); },
+      async anularResultado(id) { return anularResultado(id); },
+      async bajaPareja(p) { return bajaPareja(p); },
+      async generarFixture(c) { return generarFixture(c); },
+      async confirmarReserva(r) { return confirmarReserva(r); },
+      async guardarConfig(c) { return guardarConfig(c); },
+      async guardarTurno(t) { return guardarTurno(t); },
+      async agregarPareja(c, a, b) { return agregarPareja(c, a, b); },
+      async cambiarInscripcion(c, v) { return cambiarInscripcion(c, v); },
+      async cambiarFechaEnJuego(c, f) { return cambiarFechaEnJuego(c, f); },
+    },
+    demo: {
+      verComo(id) { if (!db.jugadores.some((j) => j.id === id)) fallar('No existe ese jugador.'); db.yo = id; fin(); },
+      // Hace de cuenta que un jugador de la pareja rival responde.
+      simularRival(id, accion) {
+        const m = partido(id);
+        const riv = pareja(m.cargado_pareja === m.a ? m.b : m.a);
+        if (accion === 'confirmar') return confirmarResultado(id, riv.jugador1);
+        return disputarResultado(id, 'No fue así: el segundo set lo ganamos nosotros.', null, riv.jugador1);
+      },
+      // El rival carga el resultado de mi partido (para probar "confirmar").
+      rivalCarga(id) {
+        const m = partido(id);
+        const mi = miParejaEn(m);
+        const riv = pareja(mi === m.a ? m.b : m.a);
+        const sets = riv.id === m.a ? [[6, 3], [4, 6], [11, 7]] : [[3, 6], [6, 4], [7, 11]];
+        return cargarResultado(id, sets, false, riv.jugador1);
+      },
+      // Adelanta el reloj: todo lo que vence en ese lapso se autoconfirma.
+      adelantarHoras(h) {
+        for (const m of db.partidos) if (m.estado === 'por_confirmar' && m.vence_at) m.vence_at -= h * HORA;
+        return autoconfirmar();
+      },
+      reiniciar() { db = generarLiga(); try { localStorage.removeItem(CLAVE); } catch (e) { /* nada */ } fin(); },
+    },
+  };
+}
+
+return { CATEGORIAS_BASE, TURNOS_BASE, generarLiga, crearDemo };
+})();
+
+const __app = (() => {
+// =====================================================================
+// LOB CUP — pantalla (la misma para demo y para Supabase)
+// =====================================================================
+const crearCapaDatos = async () => __datos_demo.crearDemo();
+const { calcularTabla, calcularRanking, validarSets, contarSets, linkWhatsApp, resumenFecha, fechaISO } = __logica;
+const CFG = window.LOB_CONFIG || {};
+const MARCA = CFG.marca || 'LOB CUP';
+const HORA = 3600e3, DIA = 24 * HORA;
+
+const S = {
+  capa: null, d: null, x: null, tab: 'inicio', sub: { partidos: 'mios', panel: 'parejas', login: 'entrar' },
+  cat: null, fecha: null, rk: 'todos', sheet: null, ed: null, rs: null, armado: null, cargando: true, errorCarga: null,
+};
+
+// ---------------------------------------------------------------------
+// Utilidades
+// ---------------------------------------------------------------------
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const $ = (sel) => document.querySelector(sel);
+const plural = (n, a, b) => `${n} ${n === 1 ? a : b}`;
+const DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+const DIAS_LARGO = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+const pesos = (n) => '$' + Number(n || 0).toLocaleString('es-AR');
+function fechaCorta(iso) { const d = new Date(iso + 'T12:00:00'); return `${DIAS[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}`; }
+function cuando(ms) {
+  const d = new Date(ms); const hoy = new Date();
+  const hh = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  if (d.toDateString() === hoy.toDateString()) return `hoy ${hh}`;
+  return `${DIAS[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1} ${hh}`;
+}
+function falta(ms) {
+  const dif = ms - Date.now();
+  if (dif <= 0) return 'ya';
+  const h = Math.round(dif / HORA);
+  return h < 1 ? `en ${Math.max(1, Math.round(dif / 60000))} min` : h < 48 ? `en ${h} h` : `en ${Math.round(h / 24)} días`;
+}
+function hace(ms) {
+  const dif = Date.now() - ms;
+  const h = Math.floor(dif / HORA);
+  if (dif < 0) return cuando(ms);
+  if (h < 1) return `hace ${Math.max(1, Math.round(dif / 60000))} min`;
+  return h < 24 ? `hace ${h} h` : `hace ${Math.floor(h / 24)} d`;
+}
+
+const I = {
+  inicio: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  partidos: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  tabla: '<path d="M4 5h16M4 10h16M4 15h16M4 20h16"/><path d="M9 3v19"/>',
+  ranking: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M10 17h4"/>',
+  perfil: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  panel: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
+  wa: '<path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/>',
+  check: '<path d="M5 12l5 5 9-10"/>',
+  x: '<path d="M6 6l12 12M18 6L6 18"/>',
+  alerta: '<path d="M12 3l10 18H2z"/><path d="M12 10v4M12 17v.5"/>',
+  reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pelota: '<circle cx="12" cy="12" r="9"/><path d="M5.5 5.5c3 3 3 10 0 13M18.5 5.5c-3 3-3 10 0 13"/>',
+  cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h3v3H8z"/>',
+  mas: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
+  pesos: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+};
+const ico = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
+const LOGO = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x=".5" y=".5" width="39" height="39" rx="10" fill="#0b0b0c" stroke="#2a2d33"/><path d="M7 31 Q 17 1 32 21" fill="none" stroke="#d4ff00" stroke-width="2.4" stroke-dasharray="3.2 3.2" stroke-linecap="round"/><circle cx="31" cy="25.5" r="5.2" fill="#d4ff00"/><path d="M27.6 22.5c2 1.6 2.4 4.4 1 6.3" fill="none" stroke="#0b0b0c" stroke-width="1.2"/></svg>';
+
+// ---------------------------------------------------------------------
+// Índices (se arman cada vez que se recarga)
+// ---------------------------------------------------------------------
+function indexar(d) {
+  const jug = new Map(d.jugadores.map((j) => [j.id, j]));
+  const par = new Map(d.parejas.map((p) => [p.id, p]));
+  const cat = new Map(d.categorias.map((c) => [c.id, c]));
+  const yo = d.yo ? jug.get(d.yo) : null;
+  const esOrg = !!(yo && yo.rol === 'organizador');
+  const misParejas = d.parejas.filter((p) => p.estado === 'activa' && d.yo && (p.jugador1 === d.yo || p.jugador2 === d.yo));
+  const miPareja = misParejas.find((p) => p.jugador2) || misParejas[0] || null;
+  const reservaDe = new Map();
+  for (const r of d.reservas) if (r.estado !== 'cancelada') reservaDe.set(r.partido_id, r);
+  const jugadoresRk = d.jugadores.filter((j) => j.rol !== 'organizador');
+  const ranking = calcularRanking(jugadoresRk.map((j) => ({ id: j.id, nombre: `${j.nombre} ${j.apellido}`.trim() })), d.parejas, d.partidos, d.config);
+  const catsDe = new Map();
+  for (const p of d.parejas) for (const j of [p.jugador1, p.jugador2]) if (j) { if (!catsDe.has(j)) catsDe.set(j, new Set()); catsDe.get(j).add(p.categoria_id); }
+  const tablas = new Map();
+  const tabla = (cid) => {
+    if (!tablas.has(cid)) tablas.set(cid, calcularTabla(d.parejas.filter((p) => p.categoria_id === cid), d.partidos.filter((m) => m.categoria_id === cid), d.config));
+    return tablas.get(cid);
+  };
+  return { jug, par, cat, yo, esOrg, misParejas, miPareja, reservaDe, ranking, catsDe, tabla };
+}
+
+const J = (id) => S.x.jug.get(id) || { nombre: '¿?', apellido: '' };
+const nombreJ = (id) => { const j = J(id); return `${j.nombre} ${j.apellido}`.trim(); };
+const apeJ = (id) => { const j = J(id); return j.apellido || j.nombre; };
+function nombreP(pid) { const p = S.x.par.get(pid); if (!p) return '¿?'; return p.jugador2 ? `${apeJ(p.jugador1)} / ${apeJ(p.jugador2)}` : `${apeJ(p.jugador1)} (sin compañero)`; }
+function nombrePLargo(pid) { const p = S.x.par.get(pid); if (!p) return '¿?'; return p.jugador2 ? `${nombreJ(p.jugador1)} y ${nombreJ(p.jugador2)}` : nombreJ(p.jugador1); }
+const catCorta = (cid) => { const c = S.x.cat.get(cid); return c ? `${c.nivel}.ª ${c.genero}` : ''; };
+const miParejaEn = (m) => S.x.misParejas.map((p) => p.id).find((id) => id === m.a || id === m.b) || null;
+const rivalDe = (m, mi) => (m.a === mi ? m.b : m.a);
+const partido = (id) => S.d.partidos.find((m) => m.id === Number(id));
+const inicial = (id) => { const j = J(id); return ((j.nombre || '?')[0] + (j.apellido || '')[0] || '').toUpperCase(); };
+
+// ---------------------------------------------------------------------
+// Carga
+// ---------------------------------------------------------------------
+async function recargar() {
+  try {
+    S.d = await S.capa.cargar();
+    S.x = indexar(S.d);
+    S.errorCarga = null;
+    if (!S.cat || !S.x.cat.has(S.cat)) S.cat = S.x.miPareja ? S.x.miPareja.categoria_id : (S.d.categorias[0] || {}).id;
+  } catch (e) {
+    S.errorCarga = e.message;
+  }
+  S.cargando = false;
+  render();
+}
+
+async function hacer(fn, ok) {
+  try {
+    const r = await fn();
+    if (ok) toast(typeof ok === 'function' ? ok(r) : ok);
+    await recargar();
+    return r;
+  } catch (e) {
+    toast(e.message || 'Algo salió mal.', true);
+    return undefined;
+  }
+}
+
+let toastT = null;
+function toast(msg, mal = false) {
+  const t = $('#toast');
+  t.textContent = msg; t.className = 'toast' + (mal ? ' mal' : ''); t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, mal ? 4200 : 2600);
+}
+
+// ---------------------------------------------------------------------
+// Render principal
+// ---------------------------------------------------------------------
+function render() {
+  const app = $('#app');
+  if (S.cargando) { app.innerHTML = `<main><div class="vacio"><b>Cargando…</b></div></main>`; return; }
+  if (S.errorCarga && !S.d) { app.innerHTML = `${vTop()}<main><div class="card pad"><b>No se pudo cargar la liga.</b><p class="mute small">${esc(S.errorCarga)}</p><button class="btn volt block" style="margin-top:12px" data-act="reintentar">Reintentar</button></div></main>`; return; }
+  const vistas = { inicio: vInicio, partidos: vPartidos, tabla: vTabla, ranking: vRanking, perfil: vPerfil, panel: vPanel };
+  if (S.tab === 'panel' && !S.x.esOrg) S.tab = 'inicio';
+  app.innerHTML = `${vTop()}<main id="vista">${(vistas[S.tab] || vInicio)()}<p class="pie">${esc(MARCA)} · ${esc(S.d.config.temporada)}${S.capa.modo === 'demo' ? ' · modo demo, datos inventados' : ''}</p></main>${vTabs()}`;
+  renderSheet();
+}
+
+function vTop() {
+  const demo = S.capa && S.capa.demo;
+  let barra = '';
+  if (demo && S.d) {
+    const yoId = S.d.yo;
+    const grupos = S.d.categorias.map((c) => {
+      const js = [];
+      for (const p of S.d.parejas.filter((x) => x.categoria_id === c.id)) for (const j of [p.jugador1, p.jugador2]) if (j) js.push(j);
+      return `<optgroup label="${esc(c.nombre)}">${js.map((j) => `<option value="${esc(j)}"${j === yoId ? ' selected' : ''}>${esc(nombreJ(j))}</option>`).join('')}</optgroup>`;
+    }).join('');
+    barra = `<div class="demo-bar"><div class="demo-in"><span class="tag">DEMO</span><label class="sr" for="verComo">Ver como</label>
+      <select id="verComo" data-chg="verComo" aria-label="Ver como"><option value="org"${yoId === 'org' ? ' selected' : ''}>Ver como: organizador</option>${grupos}</select>
+      <button class="icon-btn" data-act="menuDemo" aria-label="Opciones de la demo">${ico('mas')}</button></div></div>`;
+  }
+  const temporada = S.d ? `<span class="pill">${esc(S.d.config.temporada.replace('Temporada ', 'T'))}</span>` : '';
+  const perfilOrg = S.x && S.x.esOrg ? `<button class="icon-btn" data-act="tab" data-v="perfil" aria-label="Mi perfil">${ico('perfil')}</button>` : '';
+  return `<header class="top"><div class="top-in"><a class="logo" href="#" data-act="tab" data-v="inicio" aria-label="${esc(MARCA)}: inicio">${LOGO}<b>${esc(MARCA)}</b></a><span class="sp"></span>${temporada}${perfilOrg}</div></header>${barra}`;
+}
+
+function vTabs() {
+  const org = S.x.esOrg;
+  const urg = org ? S.d.partidos.filter((m) => m.estado === 'en_disputa').length + S.d.reservas.filter((r) => r.estado === 'pendiente').length : pendientes().filter((p) => p.urg).length;
+  const t = [['inicio', 'Inicio'], ['partidos', 'Partidos'], ['tabla', 'Tabla'], ['ranking', 'Ranking'], org ? ['panel', 'Panel'] : ['perfil', 'Perfil']];
+  return `<nav class="tabs" aria-label="Secciones"><div class="tabs-in">${t.map(([k, n]) => `<button class="${S.tab === k ? 'on' : ''}" data-act="tab" data-v="${k}" aria-label="${n}"${S.tab === k ? ' aria-current="page"' : ''}>${ico(k)}<span>${n}</span>${k === 'inicio' && urg ? `<span class="badge">${urg}</span>` : ''}</button>`).join('')}</div></nav>`;
+}
+
+// ---------------------------------------------------------------------
+// Pendientes del jugador ("notificaciones")
+// ---------------------------------------------------------------------
+function proximoDe(pid) {
+  return S.d.partidos.filter((m) => (m.a === pid || m.b === pid) && m.estado === 'pendiente').sort((x, y) => x.fecha - y.fecha)[0] || null;
+}
+function pendientes() {
+  if (!S.x.yo || S.x.esOrg) return [];
+  const out = [];
+  const mias = new Set(S.x.misParejas.map((p) => p.id));
+  for (const p of S.x.misParejas) {
+    if (!p.jugador2 && p.jugador1 === S.d.yo) out.push({ tipo: 'codigo', p, urg: false });
+  }
+  for (const m of S.d.partidos) {
+    const mi = mias.has(m.a) ? m.a : mias.has(m.b) ? m.b : null;
+    if (!mi) continue;
+    if (m.estado === 'por_confirmar' && m.cargado_pareja !== mi) out.push({ tipo: 'confirmar', m, mi, urg: true });
+    else if (m.estado === 'por_confirmar') out.push({ tipo: 'esperando', m, mi });
+    else if (m.estado === 'en_disputa') out.push({ tipo: 'disputa', m, mi });
+    else if (m.estado === 'pendiente') {
+      const r = S.x.reservaDe.get(m.id);
+      if (r && new Date(`${r.fecha}T${r.fin === '24:00' ? '23:59' : r.fin}:00`).getTime() < Date.now()) out.push({ tipo: 'cargar', m, mi, r, urg: true });
+      else if (r && r.estado === 'pendiente') out.push({ tipo: 'sena', m, mi, r });
+    }
+  }
+  for (const p of S.x.misParejas) {
+    const prox = p.jugador2 && proximoDe(p.id);
+    if (prox && !S.x.reservaDe.get(prox.id)) out.push({ tipo: 'reservar', m: prox, mi: p.id });
+  }
+  const orden = { confirmar: 0, cargar: 1, sena: 2, reservar: 3, esperando: 4, disputa: 5, codigo: 6 };
+  return out.sort((x, y) => orden[x.tipo] - orden[y.tipo]);
+}
+
+function tarjetaPendiente(p) {
+  const demo = S.capa.demo;
+  const cfg = S.d.config;
+  if (p.tipo === 'confirmar') {
+    const riv = rivalDe(p.m, p.mi);
+    return `<div class="card pend urg"><div class="ico">${ico('check')}</div><div class="grow"><b>Confirmá el resultado</b>
+      <p>${esc(nombreP(riv))} cargó ${esc(setsTxt(p.m, p.mi))} (fecha ${p.m.fecha}). Si no respondés, se confirma solo ${falta(p.m.vence_at)}.</p>
+      <div class="btns"><button class="btn volt sm" data-act="confirmar" data-id="${p.m.id}">Confirmar</button><button class="btn ghost sm" data-act="disputar" data-id="${p.m.id}">No es así</button></div></div></div>`;
+  }
+  if (p.tipo === 'esperando') {
+    return `<div class="card pend"><div class="ico">${ico('reloj')}</div><div class="grow"><b>Esperando a ${esc(nombreP(rivalDe(p.m, p.mi)))}</b>
+      <p>Cargaste ${esc(setsTxt(p.m, p.mi))}. Si no lo confirman, queda firme ${falta(p.m.vence_at)}.</p>
+      ${demo ? `<div class="btns"><button class="btn dark sm" data-act="simConfirma" data-id="${p.m.id}">Demo: rival confirma</button><button class="btn ghost sm" data-act="simRechaza" data-id="${p.m.id}">Demo: rival rechaza</button></div>` : ''}</div></div>`;
+  }
+  if (p.tipo === 'disputa') {
+    return `<div class="card pend hot"><div class="ico">${ico('alerta')}</div><div class="grow"><b>Resultado en revisión</b><p>Fecha ${p.m.fecha} contra ${esc(nombreP(rivalDe(p.m, p.mi)))}: lo define el organizador.</p>
+      <div class="btns one"><button class="btn ghost sm" data-act="partido" data-id="${p.m.id}">Ver el partido</button></div></div></div>`;
+  }
+  if (p.tipo === 'cargar') {
+    return `<div class="card pend urg"><div class="ico">${ico('pelota')}</div><div class="grow"><b>¿Cómo salió?</b><p>Jugaste la fecha ${p.m.fecha} contra ${esc(nombreP(rivalDe(p.m, p.mi)))}. Cargá el resultado.</p>
+      <div class="btns one"><button class="btn volt sm" data-act="cargar" data-id="${p.m.id}">Cargar resultado</button></div></div></div>`;
+  }
+  if (p.tipo === 'sena') {
+    const txt = `Hola! Reservé el turno del ${fechaCorta(p.r.fecha)} a las ${p.r.inicio} (cancha ${p.r.cancha}) para ${nombreP(p.m.a)} vs ${nombreP(p.m.b)}. Te paso el comprobante de la seña.`;
+    return `<div class="card pend"><div class="ico">${ico('pesos')}</div><div class="grow"><b>Turno pendiente de seña</b>
+      <p>${esc(fechaCorta(p.r.fecha))} ${esc(p.r.inicio)} · cancha ${p.r.cancha}. Transferí ${pesos(cfg.monto_sena)} al alias <b style="display:inline">${esc(cfg.alias)}</b> y mandá el comprobante.</p>
+      <div class="btns"><a class="btn dark sm" href="${esc(linkWhatsApp(cfg.whatsapp_org, txt))}" target="_blank" rel="noopener">${ico('wa')}Comprobante</a><button class="btn ghost sm" data-act="partido" data-id="${p.m.id}">Ver turno</button></div></div></div>`;
+  }
+  if (p.tipo === 'reservar') {
+    return `<div class="card pend"><div class="ico">${ico('cal')}</div><div class="grow"><b>Reservá la fecha ${p.m.fecha}</b><p>Coordiná con ${esc(nombreP(rivalDe(p.m, p.mi)))} y elegí un turno libre.</p>
+      <div class="btns"><button class="btn dark sm" data-act="reservar" data-id="${p.m.id}">Reservar</button><button class="btn ghost sm" data-act="wa" data-id="${p.m.id}">${ico('wa')}Rival</button></div></div></div>`;
+  }
+  if (p.tipo === 'codigo') {
+    const c = S.x.cat.get(p.p.categoria_id);
+    const txt = `Sumate a mi pareja en la ${MARCA} (${c.nombre}). Entrá a la app y poné este código: ${p.p.codigo || ''}`;
+    return `<div class="card pend"><div class="ico">${ico('link')}</div><div class="grow"><b>Falta tu compañero</b><p>${esc(c.nombre)}: pasale el código <b style="display:inline">${esc(p.p.codigo || '…')}</b> para que se sume.</p>
+      <div class="btns one"><a class="btn dark sm" href="${esc('https://wa.me/?text=' + encodeURIComponent(txt))}" target="_blank" rel="noopener">${ico('wa')}Mandar código</a></div></div></div>`;
+  }
+  return '';
+}
+
+// Sets como texto desde el lado de una pareja ("6-4 3-6 11-9")
+function setsTxt(m, desde) {
+  const s = desde === m.b ? m.sets.map(([a, b]) => [b, a]) : m.sets;
+  return m.wo ? `W.O. (${s.map(([a, b]) => `${a}-${b}`).join(' ')})` : s.map(([a, b]) => `${a}-${b}`).join(' ');
+}
+
+// ---------------------------------------------------------------------
+// INICIO
+// ---------------------------------------------------------------------
+function vInicio() {
+  if (S.x.esOrg) return vBandeja();
+  if (!S.x.yo) return vBienvenida();
+  const yo = S.x.yo, p = S.x.miPareja;
+  let h = `<div class="saludo"><div><p class="kicker">${esc(S.d.config.temporada)}</p><h1 class="h1">Hola, ${esc(yo.nombre || 'jugador')}</h1>
+    <p class="mute small">${p ? `${esc(S.x.cat.get(p.categoria_id).nombre)} · con ${esc(p.jugador2 ? nombreJ(p.jugador1 === yo.id ? p.jugador2 : p.jugador1) : 'compañero a confirmar')}` : 'Todavía no estás en una pareja'}</p></div></div>`;
+  if (!p) return h + `<div class="sec">${vSumate()}</div>`;
+  h += `<div class="sec">${heroProximo(p)}</div>`;
+  const pend = pendientes();
+  if (pend.length) h += `<div class="sec"><div class="sec-h"><h2 class="h2">Para hacer</h2><span class="chip ${pend.some((x) => x.urg) ? 'volt' : ''}">${pend.length}</span></div><div class="stack">${pend.map(tarjetaPendiente).join('')}</div></div>`;
+  h += miniTabla(p.categoria_id, p.id);
+  h += destacados(p.categoria_id);
+  return h;
+}
+
+function vBienvenida() {
+  return `<div class="hero"><p class="kicker">${esc(CFG.lema || 'Liga amateur de pádel')}</p><div class="fecha-big" style="margin-top:8px">Jugá.<br>Cargá.<br>Subí.</div>
+    <p style="margin-top:12px;color:var(--hero-mute)">Fixture, resultados, tabla y ranking: todo lo manejan los jugadores desde el celu.</p>
+    <div class="acciones"><button class="btn volt" data-act="tab" data-v="perfil">Entrar</button><button class="btn ghost" data-act="tab" data-v="tabla">Ver la tabla</button></div></div>
+    ${destacados(S.cat)}`;
+}
+
+function heroProximo(p) {
+  if (!p.jugador2) return `<div class="hero"><p class="kicker">Tu pareja</p><div class="fecha-big" style="font-size:40px;margin-top:6px">Falta tu compañero</div><p style="margin-top:10px;color:var(--hero-mute)">Pasale el código <b style="color:var(--volt)">${esc(p.codigo || '…')}</b>. Cuando se sume, entran al fixture.</p></div>`;
+  const m = proximoDe(p.id);
+  const st = S.x.tabla(p.categoria_id).find((r) => r.id === p.id);
+  if (!m) {
+    return `<div class="hero"><p class="kicker">Tu temporada</p><div class="fecha-big" style="font-size:44px;margin-top:6px">Sin partidos pendientes</div>
+      ${st ? `<div class="stats" style="margin-top:14px"><div class="stat"><b>${st.pos}°</b><span>Puesto</span></div><div class="stat"><b>${st.pts}</b><span>Puntos</span></div><div class="stat"><b>${st.pg}</b><span>Ganados</span></div><div class="stat"><b>${st.pj}</b><span>Jugados</span></div></div>` : ''}</div>`;
+  }
+  const riv = rivalDe(m, p.id);
+  const r = S.x.reservaDe.get(m.id);
+  const stR = S.x.tabla(p.categoria_id).find((x) => x.id === riv);
+  const chips = [];
+  if (r) chips.push(`<span class="chip">${ico('cal').replace('<svg', '<svg width="14" height="14"')} ${esc(fechaCorta(r.fecha))} ${esc(r.inicio)} · cancha ${r.cancha}</span>`, r.estado === 'confirmada' ? '<span class="chip volt">Turno confirmado</span>' : '<span class="chip" style="color:var(--warn)">Seña pendiente</span>');
+  else chips.push('<span class="chip">Sin turno todavía</span>');
+  return `<div class="hero"><p class="kicker">Tu próximo partido</p><div class="fecha-big" style="margin-top:6px">Fecha ${m.fecha}</div>
+    <div class="vs"><div class="lado"><b>${esc(nombreP(p.id))}</b><span>${st ? `${st.pos}° · ${st.pts} pts` : ''}</span></div><div class="x">VS</div><div class="lado der"><b>${esc(nombreP(riv))}</b><span>${stR ? `${stR.pos}° · ${stR.pts} pts` : ''}</span></div></div>
+    <div class="chips">${chips.join('')}</div>
+    <div class="acciones">
+      ${r ? `<button class="btn volt" data-act="cargar" data-id="${m.id}">Cargar resultado</button>` : `<button class="btn volt" data-act="reservar" data-id="${m.id}">Reservar turno</button>`}
+      <button class="btn ghost" data-act="wa" data-id="${m.id}">${ico('wa')}Rivales</button>
+      ${r ? '' : `<button class="btn ghost" data-act="cargar" data-id="${m.id}" style="grid-column:1/-1">Ya jugamos: cargar resultado</button>`}
+      ${S.capa.demo ? `<button class="btn ghost" data-act="simCarga" data-id="${m.id}" style="grid-column:1/-1">Demo: el rival carga el resultado</button>` : ''}
+    </div></div>`;
+}
+
+function miniTabla(cid, mia) {
+  const t = S.x.tabla(cid);
+  if (!t.length) return '';
+  const pos = t.findIndex((r) => r.id === mia);
+  let filas = t.slice(0, 4);
+  if (pos >= 4) filas = [...t.slice(0, 3), t[pos]];
+  return `<div class="sec"><div class="sec-h"><h2 class="h2">${esc(S.x.cat.get(cid).nombre)}</h2><button class="link" data-act="irTabla" data-v="${cid}">Tabla completa</button></div>
+    <div class="card">${tablaHTML(filas, mia)}</div></div>`;
+}
+
+function destacados(cid) {
+  if (!cid) return '';
+  const ms = S.d.partidos.filter((m) => m.categoria_id === cid);
+  const fechas = [...new Set(ms.filter((m) => m.estado === 'confirmado').map((m) => m.fecha))].sort((a, b) => b - a);
+  if (!fechas.length) return '';
+  const f = fechas[0];
+  const rf = resumenFecha(ms, f);
+  const enCat = new Set(); for (const p of S.d.parejas) if (p.categoria_id === cid) { enCat.add(p.jugador1); if (p.jugador2) enCat.add(p.jugador2); }
+  const enRacha = S.x.ranking.filter((r) => enCat.has(r.id) && r.racha && r.racha.tipo === 'G').sort((a, b) => b.racha.n - a.racha.n)[0];
+  const ganLado = (m) => (m.ganador === m.a ? [m.a, m.b] : [m.b, m.a]);
+  let h = `<div class="sec"><div class="sec-h"><h2 class="h2">Fecha ${f} en números</h2><span class="mute small">${esc(catCorta(cid))}</span></div><div class="dest">
+    <div class="card"><span class="kicker">Jugados</span><div class="big num">${rf.jugados}/${rf.total}</div></div>
+    <div class="card"><span class="kicker">Súper tie-breaks</span><div class="big num">${rf.stbs}</div></div>`;
+  if (rf.paliza) { const [g, p] = ganLado(rf.paliza.partido); h += `<div class="card full"><span class="kicker">La paliza</span><b>${esc(nombreP(g))} le ganó a ${esc(nombreP(p))} ${esc(setsTxt(rf.paliza.partido, g))}</b></div>`; }
+  if (rf.partidazo) { const [g, p] = ganLado(rf.partidazo.partido); h += `<div class="card full"><span class="kicker">El partidazo</span><b>${esc(nombreP(g))} vs ${esc(nombreP(p))}: ${esc(setsTxt(rf.partidazo.partido, g))}</b></div>`; }
+  if (enRacha && enRacha.racha.n >= 2) h += `<div class="card full"><span class="kicker">En racha</span><b>${esc(enRacha.nombre)} · ${enRacha.racha.n} triunfos seguidos</b></div>`;
+  return h + '</div></div>';
+}
+
+function vSumate() {
+  const g = S.x.yo && S.x.yo.genero;
+  const cats = S.d.categorias.filter((c) => c.inscripcion_abierta && (!g || c.genero === g));
+  return `<div class="card pad"><h2 class="h2">Sumate a la liga</h2><p class="mute small" style="margin-top:4px">Armá tu pareja: vos la creás y le pasás el código a tu compañero.</p>
+    <label class="campo" style="margin-top:12px"><span>Categoría</span><select id="catNueva">${cats.map((c) => `<option value="${c.id}">${esc(c.nombre)}</option>`).join('')}</select></label>
+    <button class="btn volt block" style="margin-top:12px" data-act="crearPareja"${cats.length ? '' : ' disabled'}>Crear mi pareja</button>
+    <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:14px"><label class="campo"><span>¿Tu compañero ya la creó? Poné su código</span><input id="codigo" autocomplete="off" autocapitalize="characters" maxlength="8" placeholder="Ej: LOB7K2"></label>
+    <button class="btn dark block" style="margin-top:10px" data-act="unirme">Unirme</button></div></div>`;
+}
+
+// Inicio del organizador: la bandeja de excepciones
+function vBandeja() {
+  const disp = S.d.partidos.filter((m) => m.estado === 'en_disputa');
+  const senas = S.d.reservas.filter((r) => r.estado === 'pendiente').sort((a, b) => (a.fecha + a.inicio).localeCompare(b.fecha + b.inicio));
+  const porConf = S.d.partidos.filter((m) => m.estado === 'por_confirmar');
+  const total = S.d.partidos.length, conf = S.d.partidos.filter((m) => m.estado === 'confirmado').length;
+  const incompletas = S.d.parejas.filter((p) => p.estado === 'activa' && !p.jugador2);
+  let h = `<p class="kicker">Organización</p><h1 class="h1">Bandeja</h1><p class="mute small" style="margin-top:6px">Solo lo que necesita tu atención. El resto lo resuelven los jugadores.</p>
+    <div class="hero sec"><p class="kicker">La liga hoy</p><div class="stats" style="margin-top:10px">
+      <div class="stat"><b>${disp.length}</b><span>Disputas</span></div><div class="stat"><b>${senas.length}</b><span>Señas</span></div>
+      <div class="stat"><b>${porConf.length}</b><span>Por confirmar</span></div><div class="stat"><b>${total ? Math.round((conf / total) * 100) : 0}%</b><span>Jugado</span></div></div></div>`;
+  h += `<div class="sec"><div class="sec-h"><h2 class="h2">Disputas</h2><span class="chip ${disp.length ? 'hot' : ''}">${disp.length}</span></div>`;
+  h += disp.length ? `<div class="stack">${disp.map(tarjetaDisputa).join('')}</div>` : `<div class="card vacio"><b>Sin disputas</b>Todo confirmado entre jugadores.</div>`;
+  h += `</div><div class="sec"><div class="sec-h"><h2 class="h2">Señas para revisar</h2><span class="chip">${senas.length}</span></div>`;
+  h += senas.length ? `<div class="card lista">${senas.map((r) => { const m = partido(r.partido_id); return `<div class="partido"><div class="meta"><span>${esc(fechaCorta(r.fecha))} ${esc(r.inicio)} · cancha ${r.cancha}</span><span>${esc(catCorta(m.categoria_id))} · F${m.fecha}</span></div>
+      <b class="small">${esc(nombreP(m.a))} vs ${esc(nombreP(m.b))}</b><div class="btns" style="margin-top:10px"><button class="btn ok sm" data-act="orgSena" data-id="${r.id}">Seña recibida</button><button class="btn ghost sm" data-act="orgCancelaTurno" data-id="${r.id}">${S.armado === 'ct' + r.id ? '¿Seguro? Tocá de nuevo' : 'Cancelar turno'}</button></div></div>`; }).join('')}</div>` : `<div class="card vacio"><b>Nada pendiente</b></div>`;
+  h += '</div>';
+  if (porConf.length) h += `<div class="sec"><div class="sec-h"><h2 class="h2">Esperando al rival</h2><span class="chip">${porConf.length}</span></div><div class="card lista">${porConf.sort((a, b) => a.vence_at - b.vence_at).map((m) => tarjetaPartido(m)).join('')}</div><p class="ayuda">Se confirman solos a las ${S.d.config.horas_autoconfirmar} h de cargados.</p></div>`;
+  if (incompletas.length) h += `<div class="sec"><div class="sec-h"><h2 class="h2">Parejas sin completar</h2></div><div class="card lista">${incompletas.map((p) => `<div class="partido"><b class="small">${esc(nombreJ(p.jugador1))}</b><div class="mute small">${esc(S.x.cat.get(p.categoria_id).nombre)} · esperando compañero</div></div>`).join('')}</div></div>`;
+  return h;
+}
+
+function tarjetaDisputa(m) {
+  const cargo = m.cargado_pareja, otro = rivalDe(m, cargo);
+  return `<div class="card pad"><div class="row" style="justify-content:space-between"><span class="kicker">${esc(S.x.cat.get(m.categoria_id).nombre)} · Fecha ${m.fecha}</span><span class="chip hot">En disputa</span></div>
+    <p class="small" style="margin-top:8px"><b>${esc(nombreP(m.a))}</b> vs <b>${esc(nombreP(m.b))}</b></p>
+    <div class="versiones" style="margin-top:10px"><div class="card"><b>Cargó ${esc(nombreP(cargo))}</b><div class="sets-txt">${esc(setsTxt(m, cargo))}</div></div>
+    <div class="card"><b>Dice ${esc(nombreP(otro))}</b><div class="sets-txt">${m.disputa_sets ? esc(setsTxt({ ...m, sets: m.disputa_sets, wo: false }, cargo)) : '—'}</div></div></div>
+    ${m.disputa_motivo ? `<p class="small mute" style="margin-top:8px">“${esc(m.disputa_motivo)}”</p>` : ''}
+    <p class="ayuda">Los dos resultados se muestran desde el lado de ${esc(nombreP(cargo))}.</p>
+    <div class="btns" style="margin-top:10px"><button class="btn dark sm" data-act="orgVale" data-id="${m.id}" data-v="cargado">Vale lo cargado</button>
+    ${m.disputa_sets ? `<button class="btn dark sm" data-act="orgVale" data-id="${m.id}" data-v="rival">Vale lo del rival</button>` : ''}
+    <button class="btn ghost sm" data-act="orgEditar" data-id="${m.id}" style="${m.disputa_sets ? 'grid-column:1/-1' : ''}">Otro resultado</button></div></div>`;
+}
+
+// ---------------------------------------------------------------------
+// PARTIDOS
+// ---------------------------------------------------------------------
+function chipEstado(m) {
+  const r = S.x.reservaDe.get(m.id);
+  if (m.estado === 'confirmado') return m.wo ? '<span class="chip solid">W.O.</span>' : m.confirmado_via === 'auto' ? '<span class="chip ok"><span class="dot"></span>Autoconfirmado</span>' : m.confirmado_via === 'organizador' ? '<span class="chip ok"><span class="dot"></span>Definido por la org.</span>' : '<span class="chip ok"><span class="dot"></span>Confirmado</span>';
+  if (m.estado === 'por_confirmar') return '<span class="chip warn"><span class="dot"></span>Por confirmar</span>';
+  if (m.estado === 'en_disputa') return '<span class="chip hot"><span class="dot"></span>En disputa</span>';
+  if (r) return r.estado === 'confirmada' ? `<span class="chip">${esc(fechaCorta(r.fecha))} ${esc(r.inicio)}</span>` : `<span class="chip warn">${esc(fechaCorta(r.fecha))} ${esc(r.inicio)} · seña</span>`;
+  return '<span class="chip">Sin turno</span>';
+}
+
+function marcadorHTML(m) {
+  const tiene = m.sets && m.sets.length;
+  const lado = (pid, i) => `<div class="eq ${m.ganador === pid && m.estado !== 'pendiente' ? 'gana' : ''}">${esc(nombreP(pid))}</div>
+    <div class="sets">${tiene ? m.sets.map((s, k) => `<span class="${s[i] > s[1 - i] ? 'g' : ''}${k === 2 ? ' stb' : ''}">${s[i]}</span>`).join('') : '<span>–</span>'}</div>`;
+  return `<div class="marcador">${lado(m.a, 0)}${lado(m.b, 1)}</div>`;
+}
+
+function tarjetaPartido(m, conCat = true) {
+  const mio = !!miParejaEn(m);
+  return `<button class="partido${mio ? ' mio' : ''}" data-act="partido" data-id="${m.id}"><div class="meta"><span>${conCat ? esc(catCorta(m.categoria_id)) + ' · ' : ''}Fecha ${m.fecha}</span>${chipEstado(m)}</div>${marcadorHTML(m)}</button>`;
+}
+
+function vPartidos() {
+  const org = S.x.esOrg;
+  const sub = org || !S.x.miPareja ? 'fixture' : S.sub.partidos;
+  let h = `<h1 class="h1">Partidos</h1>`;
+  if (!org && S.x.miPareja) h += `<div class="seg" style="margin-top:14px"><button class="${sub === 'mios' ? 'on' : ''}" data-act="sub" data-k="partidos" data-v="mios">Mis partidos</button><button class="${sub === 'fixture' ? 'on' : ''}" data-act="sub" data-k="partidos" data-v="fixture">Fixture</button></div>`;
+  if (sub === 'mios') {
+    const ids = new Set(S.x.misParejas.map((p) => p.id));
+    const ms = S.d.partidos.filter((m) => ids.has(m.a) || ids.has(m.b)).sort((a, b) => a.fecha - b.fecha);
+    const prox = ms.filter((m) => m.estado !== 'confirmado'), jug = ms.filter((m) => m.estado === 'confirmado').reverse();
+    h += `<div class="sec"><div class="sec-h"><h2 class="h2">Por jugar</h2><span class="chip">${prox.length}</span></div>${prox.length ? `<div class="card lista">${prox.map((m) => tarjetaPartido(m, false)).join('')}</div>` : '<div class="card vacio"><b>Nada pendiente</b>Ya jugaste todo.</div>'}</div>`;
+    h += `<div class="sec"><div class="sec-h"><h2 class="h2">Jugados</h2><span class="chip">${jug.length}</span></div>${jug.length ? `<div class="card lista">${jug.map((m) => tarjetaPartido(m, false)).join('')}</div>` : '<div class="card vacio">Todavía no jugaste.</div>'}</div>`;
+    return h;
+  }
+  const cid = S.cat;
+  const ms = S.d.partidos.filter((m) => m.categoria_id === cid);
+  const fechas = [...new Set(ms.map((m) => m.fecha))].sort((a, b) => a - b);
+  if (!S.fecha || !fechas.includes(S.fecha)) {
+    const abierta = fechas.find((f) => ms.some((m) => m.fecha === f && m.estado !== 'confirmado'));
+    S.fecha = abierta || fechas[fechas.length - 1] || 1;
+  }
+  h += `<div class="filtros" style="margin-top:14px">${filtrosCat()}</div>`;
+  if (!fechas.length) return h + `<div class="card vacio sec"><b>Sin fixture</b>${org ? 'Generalo desde Panel → Fixture.' : 'El organizador todavía no lo armó.'}</div>`;
+  h += `<div class="filtros" style="margin-top:6px">${fechas.map((f) => { const n = ms.filter((m) => m.fecha === f); const ok = n.filter((m) => m.estado === 'confirmado').length; return `<button class="${f === S.fecha ? 'on' : ''}" data-act="fecha" data-v="${f}">F${f} <span class="mute" style="font-weight:600">${ok}/${n.length}</span></button>`; }).join('')}</div>`;
+  const deFecha = ms.filter((m) => m.fecha === S.fecha);
+  const juegan = new Set(deFecha.flatMap((m) => [m.a, m.b]));
+  const libres = S.d.parejas.filter((p) => p.categoria_id === cid && p.estado === 'activa' && p.jugador2 && !juegan.has(p.id));
+  h += `<div class="sec" style="margin-top:12px"><div class="card lista">${deFecha.map((m) => tarjetaPartido(m, false)).join('')}</div>${libres.length ? `<p class="ayuda">Libre: ${libres.map((p) => esc(nombreP(p.id))).join(', ')}</p>` : ''}</div>`;
+  return h;
+}
+
+function filtrosCat() {
+  return S.d.categorias.map((c) => `<button class="${c.id === S.cat ? 'on' : ''}" data-act="cat" data-v="${c.id}">${esc(c.nivel)}.ª ${c.genero === 'M' ? 'Masc.' : 'Fem.'}</button>`).join('');
+}
+
+// ---------------------------------------------------------------------
+// TABLA
+// ---------------------------------------------------------------------
+function tablaHTML(filas, mia) {
+  return `<table class="tabla"><thead><tr><th class="pos">#</th><th class="eq">Pareja</th><th class="n">PJ</th><th class="n">PG</th><th class="n">PP</th><th class="n">DS</th><th class="n">DG</th><th class="pts">PTS</th></tr></thead><tbody>
+    ${filas.map((r) => `<tr class="${r.id === mia ? 'mia' : ''}${r.pos === 1 ? ' podio1' : ''}" data-act="pareja" data-id="${r.id}"><td class="pos">${r.pos}</td><td class="eq"><b>${esc(nombreP(r.id))}</b>${r.desempate ? `<small>por ${esc(r.desempate)}</small>` : ''}</td><td class="n">${r.pj}</td><td class="n">${r.pg}</td><td class="n">${r.pp}</td><td class="n">${r.ds > 0 ? '+' : ''}${r.ds}</td><td class="n">${r.dg > 0 ? '+' : ''}${r.dg}</td><td class="pts">${r.pts}</td></tr>`).join('')}</tbody></table>`;
+}
+
+function vTabla() {
+  const cid = S.cat;
+  const t = S.x.tabla(cid);
+  const mia = S.x.misParejas.find((p) => p.categoria_id === cid);
+  const cfg = S.d.config;
+  let h = `<h1 class="h1">Tabla</h1><p class="mute small" style="margin-top:6px">${esc(S.x.cat.get(cid) ? S.x.cat.get(cid).nombre : '')} · solo cuentan resultados confirmados</p><div class="filtros" style="margin-top:14px">${filtrosCat()}</div>`;
+  h += t.length ? `<div class="card sec" style="margin-top:10px">${tablaHTML(t, mia && mia.id)}</div>` : '<div class="card vacio sec"><b>Sin parejas</b></div>';
+  h += `<div class="card pad sec"><h2 class="h2">Cómo se ordena</h2><ol class="small" style="margin:8px 0 0 18px;line-height:1.7">
+    <li>Puntos (${cfg.puntos_victoria} por partido ganado${cfg.puntos_derrota ? `, ${cfg.puntos_derrota} por perdido` : ''})</li><li>Diferencia de sets</li><li>Diferencia de games (el súper tie-break suma sus puntos)</li><li>Enfrentamiento directo</li><li>Orden de inscripción</li></ol>
+    <p class="ayuda">W.O.: se carga 6-0 6-0 para el que se presentó. Si una pareja se da de baja, lo jugado queda y lo que faltaba es W.O. para el rival.</p></div>`;
+  return h;
+}
+
+// ---------------------------------------------------------------------
+// RANKING
+// ---------------------------------------------------------------------
+function rankingFiltrado() {
+  let lista = S.x.ranking.filter((r) => r.pj > 0);
+  const f = S.rk;
+  if (f === 'M' || f === 'F') lista = lista.filter((r) => J(r.id).genero === f);
+  else if (f !== 'todos') lista = lista.filter((r) => (S.x.catsDe.get(r.id) || new Set()).has(Number(f)));
+  return lista.map((r, i) => ({ ...r, puesto: i + 1 }));
+}
+function catsTxt(jid) { return [...(S.x.catsDe.get(jid) || [])].map(catCorta).join(' · '); }
+const rachaHTML = (r) => (r.racha ? `<span class="racha ${r.racha.tipo}">${r.racha.tipo === 'G' ? 'G' : 'P'}${r.racha.n}</span>` : '');
+
+function vRanking() {
+  const lista = rankingFiltrado();
+  const filtros = [['todos', 'Todos'], ['M', 'Masculino'], ['F', 'Femenino'], ...S.d.categorias.map((c) => [String(c.id), `${c.nivel}.ª ${c.genero}`])];
+  let h = `<h1 class="h1">Ranking</h1><p class="mute small" style="margin-top:6px">Puntos LOB por jugador. Si cambiás de pareja, tus puntos te siguen.</p>
+    <div class="filtros" style="margin-top:14px">${filtros.map(([k, n]) => `<button class="${S.rk === k ? 'on' : ''}" data-act="rk" data-v="${k}">${esc(n)}</button>`).join('')}</div>`;
+  if (!lista.length) return h + '<div class="card vacio sec"><b>Todavía no hay partidos confirmados</b></div>';
+  const [a, b, c] = lista;
+  const pod = (r, cls) => (r ? `<button class="p ${cls}" data-act="jugador" data-id="${esc(r.id)}"><div class="lugar">${r.puesto}</div><b>${esc(r.nombre)}</b><div class="pts">${r.pts}</div><small>${r.pg}G · ${r.pp}P</small></button>` : '<div></div>');
+  h += `<div class="podio sec" style="margin-top:14px">${pod(b, 'dos')}${pod(a, 'uno')}${pod(c, 'tres')}</div>`;
+  const yo = S.d.yo;
+  h += `<div class="card lista sec" style="margin-top:12px">${lista.slice(3).map((r) => `<button class="rk-row${r.id === yo ? ' yo' : ''}" data-act="jugador" data-id="${esc(r.id)}"><span class="pos">${r.puesto}</span><span style="min-width:0"><b>${esc(r.nombre)}</b><small>${esc(catsTxt(r.id))} · ${r.pj} PJ · ${r.pg} PG</small></span>${rachaHTML(r)}<span class="pts">${r.pts}</span></button>`).join('')}</div>`;
+  h += `<div class="sec"><button class="btn ghost block" data-act="puntos">Cómo se suman los puntos</button></div>`;
+  return h;
+}
+
+// ---------------------------------------------------------------------
+// PERFIL
+// ---------------------------------------------------------------------
+function vPerfil() {
+  if (!S.x.yo) return vLogin();
+  const yo = S.x.yo, r = S.x.ranking.find((x) => x.id === yo.id);
+  let h = `<div class="row"><div class="avatar">${esc(inicial(yo.id))}</div><div class="grow"><h1 class="h1" style="font-size:26px">${esc(nombreJ(yo.id))}</h1><p class="mute small">${S.x.esOrg ? 'Organizador' : esc(catsTxt(yo.id) || 'Sin categoría')}</p></div></div>`;
+  if (r && r.pj) {
+    const puesto = rankingFiltradoPara(yo.id);
+    h += `<div class="hero sec"><p class="kicker">Tu temporada</p><div class="stats" style="margin-top:10px"><div class="stat"><b>${r.pts}</b><span>Puntos</span></div><div class="stat"><b>${puesto}°</b><span>Ranking</span></div><div class="stat"><b>${r.pg}/${r.pj}</b><span>Ganados</span></div><div class="stat"><b>${r.racha ? r.racha.tipo + r.racha.n : '–'}</b><span>Racha</span></div></div>
+      <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small" style="color:var(--hero-mute)">Últimos</span><div class="ultimos">${r.ultimos.map((x) => `<i class="${x}">${x}</i>`).join('')}</div></div></div>`;
+  }
+  if (!S.x.esOrg) {
+    h += `<div class="sec"><div class="sec-h"><h2 class="h2">Mis parejas</h2></div>`;
+    h += S.x.misParejas.length ? `<div class="card lista">${S.x.misParejas.map((p) => `<button class="partido" data-act="pareja" data-id="${p.id}"><div class="meta"><span>${esc(S.x.cat.get(p.categoria_id).nombre)}</span>${p.jugador2 ? '<span class="chip ok"><span class="dot"></span>Completa</span>' : `<span class="chip warn">Código ${esc(p.codigo || '')}</span>`}</div><b>${esc(nombrePLargo(p.id))}</b></button>`).join('')}</div>` : '';
+    h += `<div style="margin-top:10px">${vSumate()}</div></div>`;
+  }
+  h += `<div class="card pad sec"><h2 class="h2">Mis datos</h2><div class="grid2" style="margin-top:12px"><label class="campo"><span>Nombre</span><input id="pfNombre" value="${esc(yo.nombre)}" autocomplete="given-name"></label><label class="campo"><span>Apellido</span><input id="pfApellido" value="${esc(yo.apellido)}" autocomplete="family-name"></label></div>
+    <label class="campo"><span>Celular (WhatsApp)</span><input id="pfTel" type="tel" inputmode="tel" value="${esc(yo.telefono || '')}" placeholder="351 555 1234" autocomplete="tel"></label>
+    <p class="ayuda">Lo ven solo tu compañero, tus rivales y el organizador, para coordinar los partidos.</p>
+    <button class="btn dark block" style="margin-top:12px" data-act="guardarPerfil">Guardar</button></div>`;
+  const tema = leerTema();
+  h += `<div class="card pad sec"><h2 class="h2">Apariencia</h2><div class="seg" style="margin-top:12px">${[['auto', 'Automático'], ['light', 'Claro'], ['dark', 'Oscuro']].map(([k, n]) => `<button class="${tema === k ? 'on' : ''}" data-act="tema" data-v="${k}">${n}</button>`).join('')}</div></div>`;
+  h += `<div class="sec"><button class="btn ghost block" data-act="puntos">Reglas de la liga y puntos</button></div>`;
+  if (S.capa.modo !== 'demo') h += `<div class="sec"><button class="btn ghost block" data-act="salir" style="color:var(--hot)">Cerrar sesión</button></div>`;
+  return h;
+}
+function rankingFiltradoPara(jid) { const i = S.x.ranking.filter((r) => r.pj > 0).findIndex((r) => r.id === jid); return i >= 0 ? i + 1 : '–'; }
+
+function vLogin() {
+  const sub = S.sub.login;
+  let h = `<h1 class="h1">Entrá a la liga</h1><p class="mute small" style="margin-top:6px">Con tu mail. Sin sesión igual podés ver la tabla y el ranking.</p>
+    <div class="seg" style="margin-top:14px"><button class="${sub === 'entrar' ? 'on' : ''}" data-act="sub" data-k="login" data-v="entrar">Entrar</button><button class="${sub === 'crear' ? 'on' : ''}" data-act="sub" data-k="login" data-v="crear">Crear cuenta</button><button class="${sub === 'link' ? 'on' : ''}" data-act="sub" data-k="login" data-v="link">Link al mail</button></div><div class="card pad sec" style="margin-top:12px">`;
+  if (sub === 'crear') {
+    h += `<div class="grid2"><label class="campo"><span>Nombre</span><input id="lgNombre" autocomplete="given-name"></label><label class="campo"><span>Apellido</span><input id="lgApellido" autocomplete="family-name"></label></div>
+      <label class="campo"><span>Celular (WhatsApp)</span><input id="lgTel" type="tel" inputmode="tel" autocomplete="tel" placeholder="351 555 1234"></label>
+      <label class="campo"><span>Juego en</span><select id="lgGenero"><option value="M">Masculino</option><option value="F">Femenino</option></select></label>`;
+  }
+  h += `<label class="campo"><span>Mail</span><input id="lgMail" type="email" inputmode="email" autocomplete="email" placeholder="vos@mail.com"></label>`;
+  if (sub !== 'link') h += `<label class="campo"><span>Contraseña</span><input id="lgClave" type="password" autocomplete="${sub === 'crear' ? 'new-password' : 'current-password'}" minlength="6"></label>`;
+  h += `<button class="btn volt block" style="margin-top:14px" data-act="login">${sub === 'entrar' ? 'Entrar' : sub === 'crear' ? 'Crear cuenta' : 'Mandame el link'}</button>`;
+  if (sub === 'link') h += '<p class="ayuda">Te llega un mail con un link: lo tocás desde el celu y entrás sin contraseña.</p>';
+  if (sub === 'crear') h += '<p class="ayuda">Te mandamos un mail para confirmar la cuenta.</p>';
+  return h + '</div>';
+}
+
+// ---------------------------------------------------------------------
+// PANEL (organizador)
+// ---------------------------------------------------------------------
+function vPanel() {
+  const sub = S.sub.panel;
+  const subs = [['parejas', 'Parejas'], ['fixture', 'Fixture'], ['ajustes', 'Ajustes'], ['actividad', 'Actividad']];
+  let h = `<p class="kicker">Organización</p><h1 class="h1">Panel</h1><div class="seg" style="margin-top:14px">${subs.map(([k, n]) => `<button class="${sub === k ? 'on' : ''}" data-act="sub" data-k="panel" data-v="${k}">${n}</button>`).join('')}</div>`;
+  if (sub === 'parejas') h += panelParejas();
+  if (sub === 'fixture') h += panelFixture();
+  if (sub === 'ajustes') h += panelAjustes();
+  if (sub === 'actividad') h += panelActividad();
+  return h;
+}
+
+function panelParejas() {
+  const c = S.x.cat.get(S.cat);
+  const ps = S.d.parejas.filter((p) => p.categoria_id === S.cat).sort((a, b) => (a.estado === b.estado ? a.id - b.id : a.estado === 'activa' ? -1 : 1));
+  let h = `<div class="filtros" style="margin-top:14px">${filtrosCat()}</div>
+    <div class="card pad sec" style="margin-top:10px"><label class="switch"><span><b>Inscripción abierta</b><br><span class="mute small">Los jugadores pueden armar pareja en ${esc(c.nombre)}</span></span><input type="checkbox" data-chg="inscripcion" ${c.inscripcion_abierta ? 'checked' : ''} aria-label="Inscripción abierta"></label></div>
+    <div class="sec"><div class="sec-h"><h2 class="h2">${plural(ps.filter((p) => p.estado === 'activa').length, 'pareja', 'parejas')}</h2></div><div class="card lista">`;
+  h += ps.map((p) => `<div class="partido"><div class="row"><div class="grow"><b class="small">${esc(nombrePLargo(p.id))}</b><div class="mute small">${p.estado === 'baja' ? 'Dada de baja' : p.jugador2 ? `${esc(J(p.jugador1).telefono || 'sin cel')} · ${esc(J(p.jugador2).telefono || 'sin cel')}` : 'Esperando compañero'}</div></div>
+    ${p.estado === 'activa' ? `<button class="btn ghost sm" data-act="orgBaja" data-id="${p.id}" style="${S.armado === 'baja' + p.id ? 'background:var(--hot);color:#fff;border-color:var(--hot)' : ''}">${S.armado === 'baja' + p.id ? '¿Seguro?' : 'Baja'}</button>` : '<span class="chip">Baja</span>'}</div></div>`).join('');
+  h += `</div><p class="ayuda">Baja: lo jugado queda y los partidos que faltan pasan a W.O. 6-0 6-0 para el rival.</p></div>`;
+  if (S.capa.modo === 'demo') {
+    h += `<div class="card pad sec"><h2 class="h2">Agregar pareja</h2><div class="grid2" style="margin-top:12px"><label class="campo"><span>Jugador 1</span><input id="np1" placeholder="Nombre Apellido"></label><label class="campo"><span>Jugador 2</span><input id="np2" placeholder="Nombre Apellido"></label></div>
+      <button class="btn dark block" style="margin-top:12px" data-act="orgAgregar">Agregar a ${esc(c.nombre)}</button><p class="ayuda">En la app real cada jugador se registra y arma su pareja con el código.</p></div>`;
+  }
+  return h;
+}
+
+function panelFixture() {
+  let h = '<div class="sec stack">';
+  for (const c of S.d.categorias) {
+    const ps = S.d.parejas.filter((p) => p.categoria_id === c.id && p.estado === 'activa' && p.jugador2);
+    const ms = S.d.partidos.filter((m) => m.categoria_id === c.id);
+    const conRes = ms.filter((m) => m.estado !== 'pendiente').length;
+    const fechas = [...new Set(ms.map((m) => m.fecha))].sort((a, b) => a - b);
+    const k = 'fx' + c.id;
+    h += `<div class="card pad"><div class="row" style="justify-content:space-between"><h2 class="h2">${esc(c.nombre)}</h2><span class="chip">${ms.filter((m) => m.estado === 'confirmado').length}/${ms.length}</span></div>
+      <p class="mute small" style="margin-top:4px">${plural(ps.length, 'pareja completa', 'parejas completas')} · ${plural(fechas.length, 'fecha', 'fechas')}</p>
+      ${fechas.length ? `<label class="campo" style="margin-top:10px"><span>Se puede reservar hasta</span><select data-chg="fej" data-id="${c.id}"><option value="">Todas las fechas</option>${fechas.map((f) => `<option value="${f}"${c.fecha_en_juego === f ? ' selected' : ''}>Fecha ${f}</option>`).join('')}</select></label>` : ''}
+      <button class="btn ${conRes ? 'ghost' : 'dark'} block" style="margin-top:10px" data-act="orgFixture" data-id="${c.id}"${conRes || ps.length < 2 ? ' disabled' : ''}>${S.armado === k ? '¿Seguro? Se rearma todo' : ms.length ? 'Rearmar fixture' : 'Generar fixture'} (todos contra todos)</button>
+      ${conRes ? '<p class="ayuda">Ya hay resultados: el fixture queda fijo. Para corregir, tocá el partido.</p>' : ''}</div>`;
+  }
+  return h + '</div>';
+}
+
+function panelAjustes() {
+  const c = S.d.config;
+  const campo = (k, n, tipo = 'number') => `<label class="campo"><span>${n}</span><input data-cfg="${k}" type="${tipo}" ${tipo === 'number' ? 'inputmode="numeric"' : ''} value="${esc(c[k])}"></label>`;
+  let h = `<div class="card pad sec"><h2 class="h2">Resultados</h2><div style="margin-top:12px">${campo('horas_autoconfirmar', 'Horas para autoconfirmar')}</div><p class="ayuda">Si el rival no confirma ni objeta en ese tiempo, el resultado queda firme.</p></div>
+    <div class="card pad sec"><h2 class="h2">Puntos de la tabla</h2><div class="grid2" style="margin-top:12px">${campo('puntos_victoria', 'Por ganar')}${campo('puntos_derrota', 'Por perder')}</div></div>
+    <div class="card pad sec"><h2 class="h2">Puntos del ranking</h2><div class="grid2" style="margin-top:12px">${campo('rk_gana_2sets', 'Ganar 2-0')}${campo('rk_gana_stb', 'Ganar en súper TB')}</div><div class="grid2" style="margin-top:12px">${campo('rk_pierde_stb', 'Perder en súper TB')}${campo('rk_pierde_2sets', 'Perder 0-2')}</div><div class="grid2" style="margin-top:12px">${campo('rk_wo_favor', 'W.O. a favor')}${campo('rk_wo_contra', 'No presentarse')}</div></div>
+    <div class="card pad sec"><h2 class="h2">Turnos y seña</h2><div class="grid2" style="margin-top:12px">${campo('valor_turno', 'Valor del turno')}${campo('monto_sena', 'Seña')}</div><div class="grid2" style="margin-top:12px">${campo('alias', 'Alias', 'text')}${campo('ventana_dias', 'Días para reservar')}</div><div style="margin-top:12px">${campo('whatsapp_org', 'WhatsApp de la organización', 'tel')}</div><div style="margin-top:12px">${campo('temporada', 'Temporada', 'text')}</div>
+    <button class="btn volt block" style="margin-top:14px" data-act="orgConfig">Guardar ajustes</button></div>`;
+  h += `<div class="card pad sec"><h2 class="h2">Grilla de turnos</h2><p class="mute small" style="margin-top:4px">Los horarios que los jugadores pueden reservar.</p><div style="margin-top:8px">`;
+  for (let d = 0; d < 7; d++) {
+    const ts = S.d.turnos.filter((t) => t.dia === d);
+    if (!ts.length) continue;
+    h += `<div style="padding:8px 0;border-bottom:1px solid var(--line)"><b class="small">${DIAS_LARGO[d]}</b><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:6px">${ts.map((t) => `<button class="chip" style="height:36px" data-act="orgBorrarTurno" data-id="${t.id}" aria-label="Borrar turno ${DIAS_LARGO[d]} ${t.inicio}">${t.inicio}–${t.fin === '24:00' ? '00:00' : t.fin} · ${t.canchas}c ${S.armado === 'tu' + t.id ? '¿borrar?' : '×'}</button>`).join('')}</div></div>`;
+  }
+  h += `</div><div class="grid2" style="margin-top:12px"><label class="campo"><span>Día</span><select id="ntDia">${DIAS_LARGO.map((n, i) => `<option value="${i}">${n}</option>`).join('')}</select></label><label class="campo"><span>Canchas</span><input id="ntCanchas" type="number" inputmode="numeric" value="2" min="1"></label></div>
+    <div class="grid2" style="margin-top:12px"><label class="campo"><span>Desde</span><input id="ntInicio" type="time" value="18:00"></label><label class="campo"><span>Hasta</span><input id="ntFin" type="time" value="19:30"></label></div>
+    <button class="btn dark block" style="margin-top:12px" data-act="orgTurno">Agregar turno</button></div>`;
+  return h;
+}
+
+const TXT_LOG = {
+  resultado_cargado: 'cargó el resultado', wo_cargado: 'cargó un W.O. a favor', resultado_confirmado: 'confirmó el resultado', resultado_autoconfirmado: 'Se autoconfirmó el resultado',
+  resultado_disputado: 'objetó el resultado', resultado_fijado_org: 'definió el resultado', resultado_anulado: 'anuló el resultado', turno_reservado: 'reservó turno',
+  turno_cancelado: 'canceló el turno', turno_confirmado: 'confirmó la seña', pareja_creada: 'creó una pareja', pareja_completa: 'completó su pareja',
+  pareja_baja: 'dio de baja una pareja', fixture_generado: 'generó el fixture', config_cambiada: 'cambió los ajustes',
+};
+function panelActividad() {
+  const items = S.d.actividad.slice(0, 80);
+  if (!items.length) return '<div class="card vacio sec"><b>Sin movimientos</b></div>';
+  return `<div class="card lista sec">${items.map((a) => {
+    const m = a.partido_id ? partido(a.partido_id) : null;
+    const quien = a.actor ? (a.actor === 'org' || J(a.actor).rol === 'organizador' ? 'Organización' : nombreJ(a.actor)) : '';
+    const que = TXT_LOG[a.tipo] || a.tipo;
+    const extra = a.detalle && a.detalle.sets ? ` <b>${esc(a.detalle.sets.map((s) => s.join('-')).join(' '))}</b>` : '';
+    return `<div class="log"><time>${esc(cuando(a.at))}</time>${quien ? `<b>${esc(quien)}</b> ` : ''}${esc(que)}${extra}${m ? ` · <span class="mute">${esc(catCorta(m.categoria_id))} F${m.fecha}: ${esc(nombreP(m.a))} vs ${esc(nombreP(m.b))}</span>` : ''}</div>`;
+  }).join('')}</div>`;
+}
+
+// ---------------------------------------------------------------------
+// Hojas (bottom sheets)
+// ---------------------------------------------------------------------
+function abrir(tipo, datos = {}) { S.sheet = { tipo, ...datos }; renderSheet(); }
+function cerrar() { S.sheet = null; S.ed = null; S.rs = null; renderSheet(); }
+function renderSheet() {
+  const capa = $('#capa');
+  if (!S.sheet || !S.d) { capa.innerHTML = ''; document.body.style.overflow = ''; return; }
+  const f = { partido: shPartido, editor: shEditor, reservar: shReservar, pareja: shPareja, jugador: shJugador, wa: shWa, demo: shDemo, puntos: shPuntos }[S.sheet.tipo];
+  const [titulo, cuerpo] = f();
+  const scroll = capa.querySelector('.sheet') ? capa.querySelector('.sheet').scrollTop : 0;
+  capa.innerHTML = `<div class="overlay" data-act="fondo"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(titulo)}"><div class="asa"></div><div class="sheet-h"><h2 class="h2">${esc(titulo)}</h2><button class="icon-btn" data-act="cerrar" aria-label="Cerrar">${ico('x')}</button></div>${cuerpo}</div></div>`;
+  if (scroll && S.sheet.mantenerScroll) capa.querySelector('.sheet').scrollTop = scroll;
+  document.body.style.overflow = 'hidden';
+}
+
+function shPartido() {
+  const m = partido(S.sheet.id);
+  const mi = miParejaEn(m), org = S.x.esOrg, cfg = S.d.config;
+  const r = S.x.reservaDe.get(m.id);
+  let h = `<p class="kicker">${esc(S.x.cat.get(m.categoria_id).nombre)}</p><div class="card pad" style="margin-top:8px">${marcadorHTML(m)}<div class="row" style="margin-top:12px;justify-content:space-between">${chipEstado(m)}${m.estado === 'por_confirmar' ? `<span class="small mute">Se confirma solo ${falta(m.vence_at)}</span>` : ''}</div></div>`;
+  if (r) {
+    h += `<div class="card pad" style="margin-top:10px"><div class="row"><div class="grow"><span class="kicker">Turno</span><b style="display:block;margin-top:2px">${esc(DIAS_LARGO[new Date(r.fecha + 'T12:00:00').getDay()])} ${esc(fechaCorta(r.fecha).split(' ')[1])} · ${esc(r.inicio)} a ${esc(r.fin === '24:00' ? '00:00' : r.fin)}</b><span class="small mute">Cancha ${r.cancha} · ${r.estado === 'confirmada' ? 'confirmado' : `seña de ${pesos(cfg.monto_sena)} pendiente`}</span></div>${r.estado === 'confirmada' ? '<span class="chip volt">OK</span>' : '<span class="chip warn">Seña</span>'}</div>
+      ${r.estado === 'pendiente' && mi ? `<p class="ayuda">Transferí al alias <b>${esc(cfg.alias)}</b> y mandá el comprobante. Saldo (${pesos(cfg.valor_turno - cfg.monto_sena)}) al terminar el partido.</p>` : ''}
+      ${org && r.estado === 'pendiente' ? `<div class="btns" style="margin-top:10px"><button class="btn ok sm" data-act="orgSena" data-id="${r.id}">Seña recibida</button><button class="btn ghost sm" data-act="orgCancelaTurno" data-id="${r.id}">${S.armado === 'ct' + r.id ? '¿Seguro?' : 'Cancelar turno'}</button></div>` : ''}
+      ${org && r.estado === 'confirmada' ? `<div class="btns one" style="margin-top:10px"><button class="btn ghost sm" data-act="orgCancelaTurno" data-id="${r.id}">${S.armado === 'ct' + r.id ? '¿Seguro?' : 'Cancelar turno'}</button></div>` : ''}
+      ${!org && mi && r.estado === 'pendiente' && m.estado === 'pendiente' ? `<div class="btns one" style="margin-top:10px"><button class="btn ghost sm" data-act="cancelarTurno" data-id="${r.id}">${S.armado === 'ct' + r.id ? '¿Seguro? Tocá de nuevo' : 'Cancelar turno'}</button></div>` : ''}</div>`;
+  }
+  // Línea de tiempo
+  const li = [];
+  if (m.cargado_at) li.push(`<li class="volt">${m.cargado_por ? esc(nombreJ(m.cargado_por)) : 'Alguien'} cargó ${esc(setsTxt(m, m.a))} · ${esc(cuando(m.cargado_at))}</li>`);
+  if (m.disputa_at) li.push(`<li class="hot">${esc(nombreJ(m.disputa_por))} dijo que no es así${m.disputa_motivo ? `: “${esc(m.disputa_motivo)}”` : ''} · ${esc(cuando(m.disputa_at))}</li>`);
+  if (m.estado === 'confirmado' && m.confirmado_at) li.push(`<li class="ok">${m.confirmado_via === 'auto' ? `Se autoconfirmó (${cfg.horas_autoconfirmar} h sin respuesta)` : m.confirmado_via === 'organizador' ? 'Lo definió la organización' : `${esc(nombreJ(m.confirmado_por))} lo confirmó`} · ${esc(cuando(m.confirmado_at))}</li>`);
+  if (li.length) h += `<div style="margin-top:14px"><span class="kicker">Historial</span><ul class="linea" style="margin-top:8px">${li.join('')}</ul></div>`;
+  // Acciones
+  const acc = [];
+  if (mi && !org) {
+    if (m.estado === 'pendiente') {
+      acc.push(`<button class="btn volt" data-act="cargar" data-id="${m.id}">Cargar resultado</button>`);
+      if (!r) acc.push(`<button class="btn dark" data-act="reservar" data-id="${m.id}">Reservar turno</button>`);
+      if (S.capa.demo) acc.push(`<button class="btn ghost" data-act="simCarga" data-id="${m.id}">Demo: el rival carga</button>`);
+    }
+    if (m.estado === 'por_confirmar' && m.cargado_pareja !== mi) acc.push(`<button class="btn volt" data-act="confirmar" data-id="${m.id}">Confirmar resultado</button>`, `<button class="btn ghost" data-act="disputar" data-id="${m.id}" style="color:var(--hot)">No es así</button>`);
+    if (m.estado === 'por_confirmar' && m.cargado_pareja === mi) {
+      acc.push(`<button class="btn ghost" data-act="cargar" data-id="${m.id}">Corregir lo que cargué</button>`);
+      if (S.capa.demo) acc.push(`<button class="btn dark" data-act="simConfirma" data-id="${m.id}">Demo: rival confirma</button>`, `<button class="btn ghost" data-act="simRechaza" data-id="${m.id}">Demo: rival rechaza</button>`);
+    }
+    if (m.estado !== 'confirmado') acc.push(`<button class="btn ghost" data-act="wa" data-id="${m.id}">${ico('wa')}Escribirle al rival</button>`);
+  }
+  if (org) {
+    if (m.estado === 'en_disputa') h += `<div style="margin-top:14px">${tarjetaDisputa(m)}</div>`;
+    else acc.push(`<button class="btn dark" data-act="orgEditar" data-id="${m.id}">${m.estado === 'pendiente' ? 'Cargar resultado' : 'Editar resultado'}</button>`);
+    if (m.estado !== 'pendiente') acc.push(`<button class="btn ghost" data-act="orgAnular" data-id="${m.id}" style="color:var(--hot)">${S.armado === 'an' + m.id ? '¿Seguro? Vuelve a pendiente' : 'Anular resultado'}</button>`);
+    acc.push(`<button class="btn ghost" data-act="wa" data-id="${m.id}">${ico('wa')}Contactos</button>`);
+  }
+  if (!mi && !org) acc.push(`<button class="btn ghost" data-act="pareja" data-id="${m.a}">Ver ${esc(nombreP(m.a))}</button>`, `<button class="btn ghost" data-act="pareja" data-id="${m.b}">Ver ${esc(nombreP(m.b))}</button>`);
+  if (acc.length) h += `<div class="stack" style="margin-top:16px">${acc.map((a) => a.replace('class="btn ', 'class="btn block ')).join('')}</div>`;
+  return [`Fecha ${m.fecha}`, h];
+}
+
+// Editor de resultado. modo: 'jugador' (desde mi lado), 'disputa' (desde mi lado, opcional), 'org' (A/B)
+function nuevoEditor(id, modo) {
+  const m = partido(id);
+  const desde = modo === 'org' ? m.a : miParejaEn(m);
+  let sets = [[0, 0], [0, 0], [0, 0]];
+  if (modo === 'org' && m.sets.length) sets = [...m.sets.map((s) => [...s]), [0, 0], [0, 0]].slice(0, 3);
+  else if (modo === 'jugador' && m.estado === 'por_confirmar' && m.cargado_pareja === desde) sets = [...setsDesde(m.sets, m, desde), [0, 0], [0, 0]].slice(0, 3);
+  S.ed = { id: m.id, modo, desde, sets, wo: false, ganadorWo: null, motivo: '', proponer: false };
+}
+const setsDesde = (sets, m, desde) => (desde === m.b ? sets.map(([a, b]) => [b, a]) : sets.map((s) => [...s]));
+function setsParaGuardar(ed) {
+  const m = partido(ed.id);
+  const v = validarEd(ed);
+  return v.ok ? setsDesde(v.sets, m, ed.desde) : null;
+}
+function validarEd(ed) {
+  const s = ed.sets;
+  const g1 = s[0][0] > s[0][1] ? 'a' : 'b', g2 = s[1][0] > s[1][1] ? 'a' : 'b';
+  const usar = g1 !== g2 ? s : s.slice(0, 2);
+  return validarSets(usar);
+}
+
+function shEditor() {
+  const ed = S.ed, m = partido(ed.id);
+  const otro = rivalDe(m, ed.desde);
+  const yoCol = ed.modo === 'org' ? nombreP(m.a) : 'Nosotros', elCol = ed.modo === 'org' ? nombreP(m.b) : 'Ellos';
+  const v = validarEd(ed);
+  const s = ed.sets;
+  const split = (s[0][0] > s[0][1]) !== (s[1][0] > s[1][1]) && s[0][0] !== s[0][1] && s[1][0] !== s[1][1];
+  const fila = (i, lbl, sub) => `<div class="lbl">${lbl}${sub ? `<small>${sub}</small>` : ''}</div>${[0, 1].map((j) => `<div class="step"><button data-act="st" data-i="${i}" data-j="${j}" data-d="-1" aria-label="Restar">−</button><output aria-live="polite">${s[i][j]}</output><button data-act="st" data-i="${i}" data-j="${j}" data-d="1" aria-label="Sumar">+</button></div>`).join('')}`;
+  let h = '';
+  const titulo = ed.modo === 'disputa' ? 'No es así' : ed.modo === 'org' ? 'Resultado (organización)' : 'Cargar resultado';
+  if (ed.modo === 'disputa') {
+    h += `<p class="small">${esc(nombreP(m.cargado_pareja))} cargó <b>${esc(setsTxt(m, ed.desde))}</b> (desde tu lado). Contanos qué pasó: lo revisa el organizador.</p>
+      <label class="campo" style="margin-top:12px"><span>¿Qué está mal?</span><textarea id="motivo" maxlength="300" placeholder="Ej: el súper tie-break fue 11-9 para nosotros">${esc(ed.motivo)}</textarea></label>
+      <label class="switch"><span><b>Cargar el resultado correcto</b></span><input type="checkbox" data-chg="proponer" ${ed.proponer ? 'checked' : ''}></label>`;
+  } else {
+    h += `<p class="small mute">${esc(nombreP(ed.modo === 'org' ? m.a : ed.desde))} vs ${esc(nombreP(otro))} · Fecha ${m.fecha}</p>`;
+    h += `<label class="switch" style="margin-top:6px"><span><b>${ed.modo === 'org' ? 'Fue W.O.' : 'El rival no se presentó (W.O.)'}</b><br><span class="small mute">Se carga 6-0 6-0</span></span><input type="checkbox" data-chg="wo" ${ed.wo ? 'checked' : ''}></label>`;
+  }
+  const verEditor = ed.modo === 'disputa' ? ed.proponer : !ed.wo;
+  if (verEditor) {
+    h += `<div class="score" style="margin-top:10px"><div></div><div class="hd">${esc(yoCol)}</div><div class="hd">${esc(elCol)}</div>${fila(0, 'Set 1')}${fila(1, 'Set 2')}${split ? fila(2, 'Súper TB', 'a 11') : ''}</div>`;
+    const gana = v.ok ? (v.ganador === 'a' ? yoCol : elCol) : '';
+    h += `<div class="veredicto ${v.ok ? 'ok' : 'mal'}">${v.ok ? (ed.modo === 'org' ? `Gana ${esc(gana)}` : v.ganador === 'a' ? '¡Ganaron ustedes!' : 'Ganaron ellos') + ` · ${v.sets.map((x) => x.join('-')).join(' ')}` : esc(v.error)}</div>`;
+  } else if (ed.modo === 'org' && ed.wo) {
+    h += `<div class="seg" style="margin-top:10px"><button class="${ed.ganadorWo === m.a ? 'on' : ''}" data-act="woGana" data-v="${m.a}">Gana ${esc(nombreP(m.a))}</button><button class="${ed.ganadorWo === m.b ? 'on' : ''}" data-act="woGana" data-v="${m.b}">Gana ${esc(nombreP(m.b))}</button></div>`;
+  }
+  let listo = ed.modo === 'disputa' ? (!ed.proponer || v.ok) : ed.wo ? (ed.modo !== 'org' || !!ed.ganadorWo) : v.ok;
+  const txtBtn = ed.modo === 'disputa' ? 'Mandar al organizador' : ed.modo === 'org' ? 'Guardar resultado' : 'Cargar y avisar al rival';
+  h += `<button class="btn ${ed.modo === 'disputa' ? 'hot' : 'volt'} block" style="margin-top:14px" data-act="guardarEd"${listo ? '' : ' disabled'}>${txtBtn}</button>`;
+  if (ed.modo === 'jugador') h += `<p class="ayuda">Tu rival lo tiene que confirmar. Si no contesta en ${S.d.config.horas_autoconfirmar} h, queda confirmado solo.</p>`;
+  return [titulo, h];
+}
+
+function shReservar() {
+  const m = partido(S.sheet.id);
+  const cfg = S.d.config;
+  const dias = [];
+  for (let i = 0; i <= cfg.ventana_dias; i++) {
+    const t = Date.now() + i * DIA;
+    const iso = fechaISO(t);
+    const dow = new Date(iso + 'T12:00:00').getDay();
+    if (S.d.turnos.some((x) => x.dia === dow)) dias.push(iso);
+  }
+  if (!S.rs || S.rs.id !== m.id) S.rs = { id: m.id, dia: dias[0], inicio: null };
+  const dow = new Date(S.rs.dia + 'T12:00:00').getDay();
+  const slots = S.d.turnos.filter((t) => t.dia === dow).map((t) => {
+    const ocupadas = S.d.reservas.filter((r) => r.estado !== 'cancelada' && r.fecha === S.rs.dia && r.inicio === t.inicio).length;
+    const paso = new Date(`${S.rs.dia}T${t.inicio}:00`).getTime() <= Date.now();
+    return { ...t, libres: Math.max(0, t.canchas - ocupadas), paso };
+  });
+  let h = `<p class="small mute">Fecha ${m.fecha} · ${esc(nombreP(m.a))} vs ${esc(nombreP(m.b))}</p><p class="kicker" style="margin-top:14px">Día</p>
+    <div class="dias" style="margin-top:6px">${dias.map((d) => { const x = new Date(d + 'T12:00:00'); return `<button class="${d === S.rs.dia ? 'on' : ''}" data-act="rsDia" data-v="${d}"><small>${DIAS[x.getDay()]}</small><b>${x.getDate()}</b></button>`; }).join('')}</div>
+    <p class="kicker" style="margin-top:12px">Horario</p><div class="slots">${slots.map((t) => `<button class="slot${S.rs.inicio === t.inicio ? ' on' : ''}" data-act="rsHora" data-v="${t.inicio}"${!t.libres || t.paso ? ' disabled' : ''}><b>${t.inicio}</b><small>${t.paso ? 'ya pasó' : t.libres ? plural(t.libres, 'cancha libre', 'canchas libres') : 'lleno'}</small></button>`).join('') || '<p class="mute small">Ese día no hay turnos de liga.</p>'}</div>
+    <div class="card pad" style="margin-top:14px"><div class="row">${ico('pesos').replace('<svg', '<svg width="22" height="22"')}<div class="grow small">Turno ${pesos(cfg.valor_turno)}. Para reservar: seña de <b>${pesos(cfg.monto_sena)}</b> al alias <b>${esc(cfg.alias)}</b>. Queda pendiente hasta que la organización vea el comprobante.</div></div></div>
+    <button class="btn volt block" style="margin-top:14px" data-act="rsOk"${S.rs.inicio ? '' : ' disabled'}>Reservar${S.rs.inicio ? ` ${esc(fechaCorta(S.rs.dia))} ${esc(S.rs.inicio)}` : ''}</button>`;
+  return ['Reservar turno', h];
+}
+
+function shPareja() {
+  const pid = Number(S.sheet.id);
+  const p = S.x.par.get(pid);
+  const t = S.x.tabla(p.categoria_id).find((r) => r.id === pid);
+  const ms = S.d.partidos.filter((m) => (m.a === pid || m.b === pid)).sort((a, b) => a.fecha - b.fecha);
+  let h = `<p class="kicker">${esc(S.x.cat.get(p.categoria_id).nombre)}${p.estado === 'baja' ? ' · dada de baja' : ''}</p><div class="stack" style="margin-top:8px">${[p.jugador1, p.jugador2].filter(Boolean).map((j) => `<button class="card pad row" data-act="jugador" data-id="${esc(j)}" style="width:100%;text-align:left"><div class="avatar" style="width:44px;height:44px;font-size:17px">${esc(inicial(j))}</div><div class="grow"><b>${esc(nombreJ(j))}</b><div class="small mute">Ver perfil</div></div></button>`).join('')}</div>`;
+  if (t) h += `<div class="stats" style="margin-top:12px"><div class="stat"><b>${t.pos}°</b><span>Puesto</span></div><div class="stat"><b>${t.pts}</b><span>Puntos</span></div><div class="stat"><b>${t.pg}-${t.pp}</b><span>G-P</span></div><div class="stat"><b>${t.ds > 0 ? '+' : ''}${t.ds}</b><span>Dif. sets</span></div></div>`;
+  h += `<div class="card lista" style="margin-top:12px">${ms.map((m) => tarjetaPartido(m, false)).join('')}</div>`;
+  return [nombreP(pid), h];
+}
+
+function shJugador() {
+  const jid = S.sheet.id;
+  const r = S.x.ranking.find((x) => x.id === jid);
+  const ps = S.d.parejas.filter((p) => p.jugador1 === jid || p.jugador2 === jid);
+  const ids = new Set(ps.map((p) => p.id));
+  const cfg = S.d.config;
+  const ms = S.d.partidos.filter((m) => m.estado === 'confirmado' && (ids.has(m.a) || ids.has(m.b))).sort((a, b) => b.fecha - a.fecha);
+  let h = `<div class="row"><div class="avatar">${esc(inicial(jid))}</div><div class="grow"><b style="font-size:18px">${esc(nombreJ(jid))}</b><div class="small mute">${esc(catsTxt(jid))}</div></div></div>`;
+  if (r) {
+    const pct = r.pj ? Math.round((r.pg / r.pj) * 100) : 0;
+    h += `<div class="stats" style="margin-top:14px"><div class="stat"><b>${r.pts}</b><span>Puntos</span></div><div class="stat"><b>${rankingFiltradoPara(jid)}°</b><span>Ranking</span></div><div class="stat"><b>${r.pj}</b><span>Jugados</span></div><div class="stat"><b>${pct}%</b><span>Ganados</span></div>
+      <div class="stat"><b>${r.sf}-${r.sc}</b><span>Sets</span></div><div class="stat"><b>${r.dg > 0 ? '+' : ''}${r.dg}</b><span>Dif. games</span></div><div class="stat"><b>${r.racha ? r.racha.tipo + r.racha.n : '–'}</b><span>Racha</span></div><div class="stat"><b>${r.pg}-${r.pp}</b><span>G-P</span></div></div>
+      ${r.ultimos.length ? `<div class="row" style="margin-top:12px;justify-content:space-between"><span class="kicker">Últimos partidos</span><div class="ultimos">${r.ultimos.map((x) => `<i class="${x}">${x}</i>`).join('')}</div></div>` : ''}`;
+  }
+  if (ms.length) {
+    h += `<div class="card lista" style="margin-top:12px">${ms.map((m) => {
+      const lado = ids.has(m.a) ? 'a' : 'b';
+      const mi = m[lado];
+      const gano = m.ganador === mi;
+      const pts = m.wo ? (gano ? cfg.rk_wo_favor : cfg.rk_wo_contra) : gano ? (m.sets.length > 2 ? cfg.rk_gana_stb : cfg.rk_gana_2sets) : (m.sets.length > 2 ? cfg.rk_pierde_stb : cfg.rk_pierde_2sets);
+      return `<button class="rk-row" data-act="partido" data-id="${m.id}" style="grid-template-columns:34px minmax(0,1fr) auto"><span class="racha ${gano ? 'G' : 'P'}">${gano ? 'G' : 'P'}</span><span style="min-width:0"><b>vs ${esc(nombreP(rivalDe(m, mi)))}</b><small>F${m.fecha} · ${esc(setsTxt(m, mi))}</small></span><span class="pts" style="font-size:15px">${pts > 0 ? '+' : ''}${pts}</span></button>`;
+    }).join('')}</div>`;
+  }
+  const yo = S.d.yo;
+  const tel = J(jid).telefono;
+  if (tel && jid !== yo && S.x.yo) h += `<a class="btn ghost block" style="margin-top:12px" href="${esc(linkWhatsApp(tel))}" target="_blank" rel="noopener">${ico('wa')}WhatsApp</a>`;
+  return ['Jugador', h];
+}
+
+function shWa() {
+  const m = partido(S.sheet.id);
+  const mi = miParejaEn(m);
+  const cat = S.x.cat.get(m.categoria_id);
+  const lados = S.x.esOrg ? [m.a, m.b] : [rivalDe(m, mi)];
+  const txt = S.x.esOrg ? `Hola! Te escribo de la ${MARCA} por la fecha ${m.fecha} (${cat.nombre}).` : `Hola! Somos ${nombreP(mi)} de la ${MARCA} (${cat.nombre}). Nos toca la fecha ${m.fecha}. ¿Qué día y horario les queda bien?`;
+  let h = `<p class="small mute">Se abre WhatsApp con un mensaje listo para mandar.</p><div class="stack" style="margin-top:12px">`;
+  for (const pid of lados) {
+    const p = S.x.par.get(pid);
+    for (const j of [p.jugador1, p.jugador2].filter(Boolean)) {
+      const tel = J(j).telefono;
+      h += tel ? `<a class="btn ghost block" href="${esc(linkWhatsApp(tel, txt))}" target="_blank" rel="noopener" style="justify-content:space-between"><span>${esc(nombreJ(j))}</span>${ico('wa')}</a>` : `<div class="card pad small mute">${esc(nombreJ(j))}: sin celular cargado</div>`;
+    }
+  }
+  return ['Contactos', h + '</div>'];
+}
+
+function shDemo() {
+  return ['Demo', `<p class="small">Esto es una demo con datos inventados: lo que hagas queda solo en este celu.</p>
+    <div class="stack" style="margin-top:14px">
+    <button class="btn dark block" data-act="demoReloj">Adelantar el reloj ${S.d.config.horas_autoconfirmar} h</button>
+    <p class="ayuda" style="margin-top:4px">Los resultados que nadie confirmó se confirman solos, como en la app real.</p>
+    <button class="btn ghost block" data-act="demoVer" data-v="${esc(S.capa.demo && 'yo')}">Volver a ver como jugador</button>
+    <button class="btn ghost block" data-act="demoVer" data-v="org">Ver como organizador</button>
+    <button class="btn ghost block" data-act="demoReset" style="color:var(--hot)">${S.armado === 'reset' ? '¿Seguro? Tocá de nuevo' : 'Reiniciar la demo'}</button></div>`];
+}
+
+function shPuntos() {
+  const c = S.d.config;
+  return ['Cómo funciona', `<h3 class="h2" style="font-size:16px">Ranking (puntos LOB, por jugador)</h3><ul class="lineas-explica" style="margin-top:6px">
+    <li><span>Ganar 2 sets a 0</span><b>${c.rk_gana_2sets}</b></li><li><span>Ganar en súper tie-break</span><b>${c.rk_gana_stb}</b></li><li><span>Perder en súper tie-break</span><b>${c.rk_pierde_stb}</b></li>
+    <li><span>Perder 0 a 2</span><b>${c.rk_pierde_2sets}</b></li><li><span>W.O. a favor</span><b>${c.rk_wo_favor}</b></li><li><span>No presentarse</span><b>${c.rk_wo_contra}</b></li></ul>
+    <p class="ayuda">Perder peleado suma: premia competir. Desempate: partidos ganados, dif. de sets, dif. de games.</p>
+    <h3 class="h2" style="font-size:16px;margin-top:18px">Resultados</h3><ul class="lineas-explica" style="margin-top:6px">
+    <li><span>Sets 1 y 2</span><b>a 6 (7-5, 7-6)</b></li><li><span>Tercer set</span><b>súper tie-break a 11</b></li><li><span>Lo carga</span><b>cualquiera de los 4</b></li><li><span>Lo confirma</span><b>la pareja rival</b></li><li><span>Sin respuesta</span><b>se confirma a las ${c.horas_autoconfirmar} h</b></li><li><span>"No es así"</span><b>decide la organización</b></li></ul>
+    <h3 class="h2" style="font-size:16px;margin-top:18px">Tabla por categoría</h3><p class="small" style="margin-top:6px">${c.puntos_victoria} punto por partido ganado. Desempates: dif. de sets, dif. de games, enfrentamiento directo.</p>`];
+}
+
+// ---------------------------------------------------------------------
+// Eventos
+// ---------------------------------------------------------------------
+function armar(clave) { if (S.armado === clave) { S.armado = null; return true; } S.armado = clave; render(); return false; }
+
+const ACC = {
+  reintentar: () => recargar(),
+  tab: (el) => { S.tab = el.dataset.v; S.armado = null; render(); window.scrollTo(0, 0); },
+  sub: (el) => { S.sub[el.dataset.k] = el.dataset.v; S.armado = null; render(); },
+  cat: (el) => { S.cat = Number(el.dataset.v); S.fecha = null; render(); },
+  fecha: (el) => { S.fecha = Number(el.dataset.v); render(); },
+  rk: (el) => { S.rk = el.dataset.v; render(); },
+  irTabla: (el) => { S.cat = Number(el.dataset.v); S.tab = 'tabla'; render(); window.scrollTo(0, 0); },
+  partido: (el) => abrir('partido', { id: Number(el.dataset.id) }),
+  pareja: (el) => abrir('pareja', { id: Number(el.dataset.id) }),
+  jugador: (el) => abrir('jugador', { id: el.dataset.id }),
+  wa: (el) => abrir('wa', { id: Number(el.dataset.id) }),
+  puntos: () => abrir('puntos'),
+  menuDemo: () => abrir('demo'),
+  cerrar: () => cerrar(),
+  fondo: (el, ev) => { if (ev.target === el) cerrar(); },
+  cargar: (el) => { nuevoEditor(el.dataset.id, 'jugador'); abrir('editor', { id: Number(el.dataset.id) }); },
+  disputar: (el) => { nuevoEditor(el.dataset.id, 'disputa'); abrir('editor', { id: Number(el.dataset.id) }); },
+  orgEditar: (el) => { nuevoEditor(el.dataset.id, 'org'); abrir('editor', { id: Number(el.dataset.id) }); },
+  st: (el) => {
+    const i = +el.dataset.i, j = +el.dataset.j, d = +el.dataset.d, max = i === 2 ? 30 : 7;
+    S.ed.sets[i][j] = Math.min(max, Math.max(0, S.ed.sets[i][j] + d));
+    S.sheet.mantenerScroll = true; renderSheet();
+  },
+  woGana: (el) => { S.ed.ganadorWo = Number(el.dataset.v); S.sheet.mantenerScroll = true; renderSheet(); },
+  guardarEd: async () => {
+    const ed = S.ed;
+    const m = partido(ed.id);
+    if (ed.modo === 'disputa') {
+      const motivo = ($('#motivo') || {}).value || '';
+      const sets = ed.proponer ? setsParaGuardar(ed) : null;
+      const r = await hacer(() => S.capa.disputarResultado(ed.id, motivo, sets), 'Listo: lo revisa el organizador.');
+      if (r !== undefined) cerrar();
+      return;
+    }
+    if (ed.modo === 'org') {
+      const r = await hacer(() => S.capa.org.fijarResultado(ed.id, ed.wo ? null : setsParaGuardar(ed), ed.wo, ed.ganadorWo), 'Resultado guardado.');
+      if (r !== undefined) cerrar();
+      return;
+    }
+    const r = await hacer(() => S.capa.cargarResultado(ed.id, ed.wo ? null : setsParaGuardar(ed), ed.wo), `Cargado. Le avisamos a ${nombreP(rivalDe(m, ed.desde))} para que confirme.`);
+    if (r !== undefined) cerrar();
+  },
+  confirmar: async (el) => { const r = await hacer(() => S.capa.confirmarResultado(Number(el.dataset.id)), '¡Confirmado! Ya cuenta para la tabla y el ranking.'); if (r !== undefined) cerrar(); },
+  reservar: (el) => { S.rs = null; abrir('reservar', { id: Number(el.dataset.id) }); },
+  rsDia: (el) => { S.rs.dia = el.dataset.v; S.rs.inicio = null; S.sheet.mantenerScroll = true; renderSheet(); },
+  rsHora: (el) => { S.rs.inicio = el.dataset.v; S.sheet.mantenerScroll = true; renderSheet(); },
+  rsOk: async () => { const r = await hacer(() => S.capa.reservarTurno(S.rs.id, S.rs.dia, S.rs.inicio), 'Turno reservado. Falta la seña.'); if (r !== undefined) { const id = S.rs.id; cerrar(); abrir('partido', { id }); } },
+  cancelarTurno: async (el) => { if (!armar('ct' + el.dataset.id)) return renderSheet(); await hacer(() => S.capa.cancelarReserva(Number(el.dataset.id)), 'Turno cancelado.'); },
+  crearPareja: async () => { const c = Number($('#catNueva').value); await hacer(() => S.capa.crearPareja(c), (cod) => `Pareja creada. Pasale el código ${cod} a tu compañero.`); },
+  unirme: async () => { const c = $('#codigo').value; await hacer(() => S.capa.unirmeAPareja(c), '¡Listo! Ya están inscriptos.'); },
+  guardarPerfil: async () => { await hacer(() => S.capa.actualizarPerfil({ nombre: $('#pfNombre').value.trim(), apellido: $('#pfApellido').value.trim(), telefono: $('#pfTel').value.trim() }), 'Datos guardados.'); },
+  tema: (el) => { guardarTema(el.dataset.v); render(); },
+  salir: async () => { await S.capa.salir(); await recargar(); },
+  login: async () => {
+    const sub = S.sub.login, mail = $('#lgMail').value.trim(), clave = $('#lgClave') ? $('#lgClave').value : '';
+    if (!mail) return toast('Escribí tu mail.', true);
+    if (sub === 'entrar') await hacer(() => S.capa.entrar(mail, clave), '¡Bienvenido!');
+    else if (sub === 'link') await hacer(() => S.capa.linkMagico(mail), 'Te mandamos el link. Revisá tu mail.');
+    else await hacer(() => S.capa.registrarse({ email: mail, clave, nombre: $('#lgNombre').value.trim(), apellido: $('#lgApellido').value.trim(), telefono: $('#lgTel').value.trim(), genero: $('#lgGenero').value }), 'Cuenta creada. Confirmá desde tu mail.');
+  },
+  // demo
+  simConfirma: async (el) => { await hacer(async () => S.capa.demo.simularRival(Number(el.dataset.id), 'confirmar'), 'El rival confirmó. Mirá la tabla y el ranking.'); if (S.sheet) renderSheet(); },
+  simRechaza: async (el) => { await hacer(async () => S.capa.demo.simularRival(Number(el.dataset.id), 'disputar'), 'El rival dijo que no es así: pasa al organizador.'); if (S.sheet) renderSheet(); },
+  simCarga: async (el) => { await hacer(async () => S.capa.demo.rivalCarga(Number(el.dataset.id)), 'Tu rival cargó el resultado: confirmalo.'); cerrar(); },
+  demoReloj: async () => { const n = await hacer(async () => S.capa.demo.adelantarHoras(S.d.config.horas_autoconfirmar), (n) => (n ? `Se autoconfirmaron ${plural(n, 'resultado', 'resultados')}.` : 'No había resultados esperando.')); if (n !== undefined) cerrar(); },
+  demoVer: async (el) => { const v = el.dataset.v === 'org' ? 'org' : 'j17'; await hacer(async () => S.capa.demo.verComo(v)); S.tab = 'inicio'; cerrar(); render(); },
+  demoReset: async () => { if (!armar('reset')) return renderSheet(); await hacer(async () => S.capa.demo.reiniciar(), 'Demo reiniciada.'); S.tab = 'inicio'; cerrar(); },
+  // organizador
+  orgVale: async (el) => {
+    const m = partido(el.dataset.id);
+    const sets = el.dataset.v === 'rival' ? m.disputa_sets : m.sets;
+    const r = await hacer(() => S.capa.org.fijarResultado(m.id, m.wo && el.dataset.v !== 'rival' ? null : sets, m.wo && el.dataset.v !== 'rival', m.ganador), 'Disputa resuelta.');
+    if (r !== undefined && S.sheet) cerrar();
+  },
+  orgAnular: async (el) => { if (!armar('an' + el.dataset.id)) return renderSheet(); await hacer(() => S.capa.org.anularResultado(Number(el.dataset.id)), 'Resultado anulado.'); },
+  orgSena: async (el) => { await hacer(() => S.capa.org.confirmarReserva(Number(el.dataset.id)), 'Turno confirmado.'); },
+  orgCancelaTurno: async (el) => { if (!armar('ct' + el.dataset.id)) return renderSheet(); await hacer(() => S.capa.cancelarReserva(Number(el.dataset.id)), 'Turno cancelado.'); },
+  orgBaja: async (el) => { if (!armar('baja' + el.dataset.id)) return; await hacer(() => S.capa.org.bajaPareja(Number(el.dataset.id)), (n) => `Pareja dada de baja. ${plural(n, 'partido pasó', 'partidos pasaron')} a W.O.`); },
+  orgFixture: async (el) => { if (!armar('fx' + el.dataset.id)) return; await hacer(() => S.capa.org.generarFixture(Number(el.dataset.id)), (n) => `Fixture listo: ${n} partidos.`); },
+  orgAgregar: async () => { await hacer(() => S.capa.org.agregarPareja(S.cat, $('#np1').value, $('#np2').value), 'Pareja agregada.'); },
+  orgConfig: async () => {
+    const c = {};
+    document.querySelectorAll('[data-cfg]').forEach((i) => { c[i.dataset.cfg] = i.type === 'number' ? Number(i.value) : i.value.trim(); });
+    await hacer(() => S.capa.org.guardarConfig(c), 'Ajustes guardados.');
+  },
+  orgTurno: async () => { await hacer(() => S.capa.org.guardarTurno({ dia: $('#ntDia').value, inicio: $('#ntInicio').value, fin: $('#ntFin').value, canchas: $('#ntCanchas').value }), 'Turno agregado.'); },
+  orgBorrarTurno: async (el) => { if (!armar('tu' + el.dataset.id)) return; await hacer(() => S.capa.org.guardarTurno({ id: Number(el.dataset.id), borrar: true }), 'Turno borrado.'); },
+};
+
+const CHG = {
+  verComo: async (el) => { await hacer(async () => S.capa.demo.verComo(el.value)); S.tab = 'inicio'; render(); window.scrollTo(0, 0); },
+  wo: (el) => { S.ed.wo = el.checked; renderSheet(); },
+  proponer: (el) => { S.ed.motivo = ($('#motivo') || {}).value || ''; S.ed.proponer = el.checked; S.sheet.mantenerScroll = true; renderSheet(); },
+  inscripcion: (el) => hacer(() => S.capa.org.cambiarInscripcion(S.cat, el.checked), el.checked ? 'Inscripción abierta.' : 'Inscripción cerrada.'),
+  fej: (el) => hacer(() => S.capa.org.cambiarFechaEnJuego(Number(el.dataset.id), el.value), 'Guardado.'),
+};
+
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const f = ACC[el.dataset.act];
+  if (!f) return;
+  if (el.tagName === 'A' && el.getAttribute('href') === '#') ev.preventDefault();
+  if (el.dataset.act !== 'fondo' || ev.target === el) ev.preventDefault();
+  f(el, ev);
+});
+document.addEventListener('change', (ev) => { const el = ev.target.closest('[data-chg]'); if (el && CHG[el.dataset.chg]) CHG[el.dataset.chg](el); });
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && S.sheet) cerrar(); });
+
+// ---------------------------------------------------------------------
+// Tema claro/oscuro
+// ---------------------------------------------------------------------
+function leerTema() { try { return localStorage.getItem('lobcup-tema') || 'auto'; } catch (e) { return 'auto'; } }
+function guardarTema(t) { try { localStorage.setItem('lobcup-tema', t); } catch (e) { /* sin storage */ } aplicarTema(t); }
+function aplicarTema(t) { if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
+
+// ---------------------------------------------------------------------
+// Arranque
+// ---------------------------------------------------------------------
+async function iniciar() {
+  aplicarTema(leerTema());
+  document.title = MARCA;
+  render();
+  try {
+    S.capa = await crearCapaDatos(CFG);
+    if (S.capa.onSesion) S.capa.onSesion(() => recargar());
+  } catch (e) {
+    S.cargando = false; S.errorCarga = 'No se pudo conectar: ' + e.message; render(); return;
+  }
+  await recargar();
+}
+window.LOB = { S, recargar, render, cerrar };
+iniciar();
+
+return {  };
+})();
+
+</script>
+</body>
+</html>

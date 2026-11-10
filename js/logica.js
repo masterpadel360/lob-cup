@@ -237,3 +237,6 @@ export function resumenFecha(partidos, fecha) {
   }
   return { fecha, jugados: partidos.filter((m) => m.fecha === fecha && m.estado === 'confirmado').length, total, paliza, partidazo, stbs: conf.filter((m) => m.sets.length >= 3).length };
 }
+
+// Fecha local AAAA-MM-DD (para reservas).
+export const fechaISO = (ms) => { const d = new Date(ms); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };

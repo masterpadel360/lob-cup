@@ -4,7 +4,7 @@
 // así lo que se ve en la demo es lo que va a pasar con la base real.
 // Todos los nombres y teléfonos son INVENTADOS.
 // =====================================================================
-import { CONFIG_BASE, validarSets, SETS_WO, roundRobin, vencidos } from './logica.js';
+import { CONFIG_BASE, validarSets, SETS_WO, roundRobin, vencidos, fechaISO } from './logica.js';
 
 const CLAVE = 'lobcup-demo-v1';
 const HORA = 3600e3, DIA = 24 * HORA;
@@ -42,7 +42,6 @@ function prng(semilla) {
   return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 }
 
-export const fechaISO = (ms) => { const d = new Date(ms); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 
 // ---------------------------------------------------------------------
 // Liga de ejemplo: 6 categorías × 8 parejas = 48 parejas, fixture de 7 fechas,
